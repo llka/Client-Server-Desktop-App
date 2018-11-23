@@ -6,13 +6,12 @@ import ru.sportequipment.entity.CommandRequest;
 
 public class ActionFactory {
     private static final Logger logger = LogManager.getLogger(ActionFactory.class);
-    private static final String COMMAND_PARAM = "command";
 
     public ActionCommand defineCommand(CommandRequest request) {
 
         ActionCommand command = new EmptyCommand();
 
-        CommandType commandType = request.getCommand();
+        CommandType commandType = CommandType.valueOf(request.getCommand());
         if (commandType == null) {
             return command;
         }

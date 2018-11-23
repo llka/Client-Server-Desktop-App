@@ -12,6 +12,6 @@ public class EmptyCommand implements ActionCommand {
     public CommandResponse execute(CommandRequest request, CommandResponse response) {
         logger.debug("Welcome to empty command");
 
-        return new CommandResponse(CommandType.EMPTY);
+        return new CommandResponse(CommandType.EMPTY.toString());
     }
 }

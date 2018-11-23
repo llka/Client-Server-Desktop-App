@@ -12,6 +12,6 @@ public class LogInCommand implements ActionCommand {
 
     @Override
     public CommandResponse execute(CommandRequest request, CommandResponse response) {
-        return new CommandResponse(CommandType.LOGIN, "logged in");
+        return new CommandResponse(CommandType.LOGIN.toString(), "logged in");
     }
 }

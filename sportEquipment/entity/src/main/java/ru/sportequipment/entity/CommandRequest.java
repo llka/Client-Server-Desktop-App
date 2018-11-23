@@ -1,12 +1,10 @@
 package ru.sportequipment.entity;
 
-import ru.sportequipment.command.CommandType;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class CommandRequest {
-    private CommandType command;
+    private String command;
     private String body;
     private Map<String, String> parameters;
 
@@ -14,28 +12,28 @@ public class CommandRequest {
         parameters = new HashMap<>();
     }
 
-    public CommandRequest(CommandType command) {
+    public CommandRequest(String command) {
         this.command = command;
         parameters = new HashMap<>();
     }
 
-    public CommandRequest(CommandType command, String body) {
+    public CommandRequest(String command, String body) {
         this.command = command;
         this.body = body;
         parameters = new HashMap<>();
     }
 
-    public CommandRequest(CommandType command, String body, Map<String, String> parameters) {
+    public CommandRequest(String command, String body, Map<String, String> parameters) {
         this.command = command;
         this.body = body;
         this.parameters = parameters;
     }
 
-    public CommandType getCommand() {
+    public String getCommand() {
         return command;
     }
 
-    public void setCommand(CommandType command) {
+    public void setCommand(String command) {
         this.command = command;
     }
 

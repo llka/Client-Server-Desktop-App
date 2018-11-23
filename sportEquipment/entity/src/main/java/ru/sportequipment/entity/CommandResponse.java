@@ -1,10 +1,9 @@
 package ru.sportequipment.entity;
 
-import ru.sportequipment.command.CommandType;
 import ru.sportequipment.entity.enums.ResponseStatus;
 
 public class CommandResponse {
-    private CommandType fromCommand;
+    private String fromCommand;
     private String body;
     private ResponseStatus status;
 
@@ -20,17 +19,17 @@ public class CommandResponse {
         this.status = status;
     }
 
-    public CommandResponse(CommandType fromCommand, String body, ResponseStatus status) {
+    public CommandResponse(String fromCommand, String body, ResponseStatus status) {
         this.fromCommand = fromCommand;
         this.body = body;
         this.status = status;
     }
 
-    public CommandResponse(CommandType fromCommand) {
+    public CommandResponse(String fromCommand) {
         this.fromCommand = fromCommand;
     }
 
-    public CommandResponse(CommandType fromCommand, String body) {
+    public CommandResponse(String fromCommand, String body) {
         this.fromCommand = fromCommand;
         this.body = body;
     }
@@ -43,11 +42,11 @@ public class CommandResponse {
         this.status = status;
     }
 
-    public CommandType getFromCommand() {
+    public String getFromCommand() {
         return fromCommand;
     }
 
-    public void setFromCommand(CommandType fromCommand) {
+    public void setFromCommand(String fromCommand) {
         this.fromCommand = fromCommand;
     }
 
