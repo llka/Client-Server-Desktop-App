@@ -6,7 +6,7 @@ import ru.sportequipment.entity.CommandRequest;
 import ru.sportequipment.entity.CommandResponse;
 
 public class EmptyCommand implements ActionCommand {
-    static Logger logger = LogManager.getLogger(EmptyCommand.class);
+    private static final Logger logger = LogManager.getLogger(EmptyCommand.class);
 
     @Override
     public CommandResponse execute(CommandRequest request, CommandResponse response) {

@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Client {
     private static final Logger logger = LogManager.getLogger(Client.class);

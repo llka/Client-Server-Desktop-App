@@ -7,7 +7,7 @@ public class ConnectionHolder {
     public ConnectionHolder() {
     }
 
-    public static Client getClient(){
+    public static Client getClient() {
         return client;
     }
 

@@ -2,6 +2,7 @@ package ru.sportequipment.client.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextInputDialog;
 import org.apache.log4j.LogManager;
@@ -15,6 +16,9 @@ import java.util.Optional;
 
 public class RootController {
     private static final Logger logger = LogManager.getLogger(RootController.class);
+
+    private static boolean connected = false;
+    private static boolean authenticated = false;
 
     @FXML
     private MenuItem menuServerConnect;
@@ -45,9 +49,15 @@ public class RootController {
                 ConnectionHolder.getClient().connect();
                 ConnectionHolder.setServer(new Thread(new ServerResponseListener(ConnectionHolder.getClient().getSocketInput())));
                 ConnectionHolder.getServer().start();
+
+                connected = true;
+                menuServerConnect.setDisable(connected);
+                alert("Successfully connected to the server!");
             } catch (ClientException e) {
-                logger.error("Can not connect to server o!" + e);
+                alert("Can not connect to the server!");
+                logger.error("Can not connect to the server!" + e);
             }
+
         } else {
             logger.info("cancelled");
         }
@@ -58,4 +68,11 @@ public class RootController {
 
     }
 
+    private void alert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information");
+        alert.setHeaderText("Information");
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }

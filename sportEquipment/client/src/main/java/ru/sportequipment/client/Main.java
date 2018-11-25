@@ -7,7 +7,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import ru.sportequipment.client.client.Client;
 
 import java.io.IOException;
 
@@ -28,17 +27,15 @@ public class Main extends Application {
         initRootLayout();
     }
 
-    //Initializes the root layout.
+
     public void initRootLayout() {
         try {
-            //First, load root layout from RootLayout.fxml
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("/layout/root.fxml"));
             rootLayout = (AnchorPane) loader.load();
 
-            //Second, show the scene containing the root layout.
             Scene scene = new Scene(rootLayout, 400, 300);
-            stage.setScene(scene); //Set the scene in primary stage.
+            stage.setScene(scene);
 
             /*//Give the controller access to the main.
             RootLayoutController controller = loader.getController();
@@ -46,7 +43,7 @@ public class Main extends Application {
 
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Cannot init rool layout" + e);
         }
     }
 
