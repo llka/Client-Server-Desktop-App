@@ -8,7 +8,7 @@ import javafx.scene.control.TextInputDialog;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import ru.sportequipment.client.client.Client;
-import ru.sportequipment.client.client.ConnectionHolder;
+import ru.sportequipment.client.client.ContextHolder;
 import ru.sportequipment.client.exception.ClientException;
 import ru.sportequipment.client.listner.ServerResponseListener;
 
@@ -28,9 +28,9 @@ public class RootController {
 
     @FXML
     void connectToServer(ActionEvent event) {
-        TextInputDialog dialog = new TextInputDialog("8844");
+        TextInputDialog dialog = new TextInputDialog("1996");
         dialog.setTitle("Connect Dialog");
-        dialog.setHeaderText("Enter server port to connect:");
+        dialog.setHeaderText("Enter server's port to connect with.");
         dialog.setContentText("Port number:");
 
         // Traditional way to get the response value.
@@ -41,17 +41,19 @@ public class RootController {
                 portNumber = Integer.parseInt(result.get());
                 logger.info("port number: " + portNumber);
             } catch (NumberFormatException e) {
-                logger.error("Wrnog input format!");
+                logger.error("Wrong input format!");
+                alert("Wrong input format!");
             }
 
             try {
-                ConnectionHolder.setClient(new Client(portNumber));
-                ConnectionHolder.getClient().connect();
-                ConnectionHolder.setServer(new Thread(new ServerResponseListener(ConnectionHolder.getClient().getSocketInput())));
-                ConnectionHolder.getServer().start();
+                ContextHolder.setClient(new Client(portNumber));
+                ContextHolder.getClient().connect();
+                ContextHolder.setServer(new Thread(new ServerResponseListener(ContextHolder.getClient().getSocketInput())));
+                ContextHolder.getServer().start();
 
                 connected = true;
                 menuServerConnect.setDisable(connected);
+                menuServerDisonnect.setDisable(!connected);
                 alert("Successfully connected to the server!");
             } catch (ClientException e) {
                 alert("Can not connect to the server!");
@@ -65,7 +67,16 @@ public class RootController {
 
     @FXML
     void disconnectFromServer(ActionEvent event) {
-
+        try {
+            ContextHolder.getClient().disconnect();
+            connected = false;
+            menuServerConnect.setDisable(connected);
+            menuServerDisonnect.setDisable(!connected);
+            alert("Successfully disconnected from the server!");
+        } catch (ClientException e) {
+            alert("Can not disconnect from the server!");
+            logger.error("Can not disconnect from the server!" + e);
+        }
     }
 
     private void alert(String message) {

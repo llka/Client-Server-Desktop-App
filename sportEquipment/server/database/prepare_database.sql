@@ -15,9 +15,9 @@ CREATE SCHEMA IF NOT EXISTS `sport_equipment` DEFAULT CHARACTER SET utf8 ;
 USE `sport_equipment` ;
 
 -- -----------------------------------------------------
--- Table `sport_equipment`.`account`
+-- Table `sport_equipment`.`contact`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sport_equipment`.`account` (
+CREATE TABLE IF NOT EXISTS `sport_equipment`.`contact` (
   `contact_id` INT NOT NULL AUTO_INCREMENT,
   `first_name` VARCHAR(45) NOT NULL,
   `last_name` VARCHAR(45) NOT NULL,
@@ -60,20 +60,20 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `sport_equipment`.`account_has_stick`
+-- Table `sport_equipment`.`contact_has_stick`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sport_equipment`.`account_has_stick` (
-  `account_contact_id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `sport_equipment`.`contact_has_stick` (
+  `contact_contact_id` INT NOT NULL,
   `stick_stick_id` INT NOT NULL,
-  PRIMARY KEY (`account_contact_id`, `stick_stick_id`),
-  INDEX `fk_account_has_Stick_Stick1_idx` (`stick_stick_id` ASC),
-  INDEX `fk_account_has_Stick_account_idx` (`account_contact_id` ASC),
-  CONSTRAINT `fk_account_has_Stick_account`
-    FOREIGN KEY (`account_contact_id`)
-    REFERENCES `sport_equipment`.`account` (`contact_id`)
+  PRIMARY KEY (`contact_contact_id`, `stick_stick_id`),
+  INDEX `fk_contact_has_stick_stick1_idx` (`stick_stick_id` ASC),
+  INDEX `fk_contact_has_stick_contact_idx` (`contact_contact_id` ASC),
+  CONSTRAINT `fk_contact_has_stick_contact`
+    FOREIGN KEY (`contact_contact_id`)
+    REFERENCES `sport_equipment`.`contact` (`contact_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT `fk_account_has_Stick_Stick1`
+  CONSTRAINT `fk_contact_has_stick_stick1`
     FOREIGN KEY (`stick_stick_id`)
     REFERENCES `sport_equipment`.`stick` (`stick_id`)
     ON DELETE CASCADE
@@ -82,20 +82,20 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `sport_equipment`.`account_has_skates`
+-- Table `sport_equipment`.`contact_has_skates`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sport_equipment`.`account_has_skates` (
-  `account_contact_id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `sport_equipment`.`contact_has_skates` (
+  `contact_contact_id` INT NOT NULL,
   `skates_skates_id` INT NOT NULL,
-  PRIMARY KEY (`account_contact_id`, `skates_skates_id`),
-  INDEX `fk_account_has_skates_skates1_idx` (`skates_skates_id` ASC),
-  INDEX `fk_account_has_skates_account1_idx` (`account_contact_id` ASC),
-  CONSTRAINT `fk_account_has_skates_account1`
-    FOREIGN KEY (`account_contact_id`)
-    REFERENCES `sport_equipment`.`account` (`contact_id`)
+  PRIMARY KEY (`contact_contact_id`, `skates_skates_id`),
+  INDEX `fk_contact_has_skates_skates1_idx` (`skates_skates_id` ASC),
+  INDEX `fk_contact_has_skates_contact1_idx` (`contact_contact_id` ASC),
+  CONSTRAINT `fk_contact_has_skates_contact1`
+    FOREIGN KEY (`contact_contact_id`)
+    REFERENCES `sport_equipment`.`contact` (`contact_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT `fk_account_has_skates_skates1`
+  CONSTRAINT `fk_contact_has_skates_skates1`
     FOREIGN KEY (`skates_skates_id`)
     REFERENCES `sport_equipment`.`skates` (`skates_id`)
     ON DELETE CASCADE
@@ -108,12 +108,12 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- -----------------------------------------------------
--- Data for table `sport_equipment`.`account`
+-- Data for table `sport_equipment`.`contact`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `sport_equipment`;
-INSERT INTO `sport_equipment`.`account` (`contact_id`, `first_name`, `last_name`, `email`, `password`, `role`) VALUES (1, 'Ivan', 'Ivanov', 'ivan@mail.ru', '1111', 'ADMIN');
-INSERT INTO `sport_equipment`.`account` (`contact_id`, `first_name`, `last_name`, `email`, `password`, `role`) VALUES (2, 'Petya', 'Petrov', 'petya@mail.ru', '1111', 'USER');
+INSERT INTO `sport_equipment`.`contact` (`contact_id`, `first_name`, `last_name`, `email`, `password`, `role`) VALUES (1, 'Ivan', 'Ivanov', 'ivan@mail.ru', '1111', 'ADMIN');
+INSERT INTO `sport_equipment`.`contact` (`contact_id`, `first_name`, `last_name`, `email`, `password`, `role`) VALUES (2, 'Petya', 'Petrov', 'petya@mail.ru', '1111', 'USER');
 
 COMMIT;
 

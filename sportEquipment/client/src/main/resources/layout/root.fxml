@@ -8,7 +8,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.sportequipment.client.controller.RootController">
    <children>
       <MenuBar layoutX="14.0" layoutY="14.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -16,7 +15,7 @@
             <Menu mnemonicParsing="false" text="Server">
               <items>
                 <MenuItem fx:id="menuServerConnect" mnemonicParsing="false" onAction="#connectToServer" text="Connect" />
-                  <MenuItem fx:id="menuServerDisonnect" mnemonicParsing="false" onAction="#disconnectFromServer" text="Disconnect" />
+                  <MenuItem fx:id="menuServerDisonnect" disable="true" mnemonicParsing="false" onAction="#disconnectFromServer" text="Disconnect" />
               </items>
             </Menu>
           <Menu mnemonicParsing="false" text="File">
@@ -34,6 +33,12 @@
               <MenuItem mnemonicParsing="false" text="About" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Authentication">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Log in" />
+                  <MenuItem mnemonicParsing="false" text="Log out" />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
    </children>
