@@ -29,6 +29,11 @@
             <artifactId>jackson-core</artifactId>
             <version>${jackson.json.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.json.version}</version>
+        </dependency>
 
         <!--logger-->
         <dependency>

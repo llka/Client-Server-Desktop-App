@@ -29,13 +29,6 @@
             <version>${mysql.connector.version}</version>
         </dependency>
 
-        <!--json-->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${jackson.json.version}</version>
-        </dependency>
-
         <!--logger-->
         <dependency>
             <groupId>log4j</groupId>
@@ -53,8 +46,13 @@
         <!--json-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.json.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.7</version>
+            <version>${jackson.json.version}</version>
         </dependency>
 
     </dependencies>

@@ -14,8 +14,10 @@ import ru.sportequipment.client.client.Client;
 import ru.sportequipment.client.client.ContextHolder;
 import ru.sportequipment.client.exception.ClientException;
 import ru.sportequipment.client.listner.ServerResponseListener;
+import ru.sportequipment.client.util.JsonUtil;
 import ru.sportequipment.entity.CommandRequest;
 import ru.sportequipment.entity.CommandResponse;
+import ru.sportequipment.entity.Contact;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -130,19 +132,21 @@ public class RootController {
             params.put("password", emailAndPassword.getValue());
             try {
                 ContextHolder.getClient().sendRequest(new CommandRequest("LOGIN", null, params));
+                logger.debug("email=" + emailAndPassword.getKey() + ", Password=" + emailAndPassword.getValue());
 
-                CommandResponse response = ContextHolder.getResponseStack().pop();
-                while (true) {
-                    try {
-                        CommandResponse response = ContextHolder.getResponseStack().pop();
-                    }catch ()
-
+                CommandResponse response = Controller.getLastResponse();
+                if (response.getStatus().is2xxSuccessful()) {
+                    alert("Successfully logged in!");
+                    logger.debug(JsonUtil.deserialize(response.getBody(), Contact.class).toString());
+                } else {
+                    alert(Alert.AlertType.ERROR, "Cannot login", response.getBody());
                 }
+
             } catch (ClientException e) {
-                alert(Alert.AlertType.ERROR,"Cannot login", e.getMessage());
+                alert(Alert.AlertType.ERROR, "Cannot login", e.getMessage());
             }
 
-            logger.debug("email=" + emailAndPassword.getKey() + ", Password=" + emailAndPassword.getValue());
+
         });
 
 
