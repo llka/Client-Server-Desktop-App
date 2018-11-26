@@ -1,6 +1,7 @@
 package ru.sportequipment.client.listner;
 
 import org.apache.log4j.Logger;
+import ru.sportequipment.client.client.ContextHolder;
 import ru.sportequipment.entity.CommandResponse;
 
 import java.io.IOException;
@@ -29,6 +30,7 @@ public class ServerResponseListener extends Thread {
             try {
                 CommandResponse response = (CommandResponse) socketInput.readObject();
                 lastResponse = response;
+                ContextHolder.getResponseStack().push(response);
                 logger.debug("Response received: " + response);
 
             } catch (IOException e) {

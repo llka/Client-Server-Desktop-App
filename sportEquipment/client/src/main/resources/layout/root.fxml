@@ -18,6 +18,12 @@
                   <MenuItem fx:id="menuServerDisonnect" disable="true" mnemonicParsing="false" onAction="#disconnectFromServer" text="Disconnect" />
               </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Authentication">
+              <items>
+                <MenuItem fx:id="menuLogIn" mnemonicParsing="false" onAction="#login" text="Log in" />
+                  <MenuItem fx:id="menuLogOut" disable="true" mnemonicParsing="false" onAction="#logOut" text="Log out" />
+              </items>
+            </Menu>
           <Menu mnemonicParsing="false" text="File">
             <items>
               <MenuItem mnemonicParsing="false" text="Close" />
@@ -33,12 +39,6 @@
               <MenuItem mnemonicParsing="false" text="About" />
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="Authentication">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Log in" />
-                  <MenuItem mnemonicParsing="false" text="Log out" />
-              </items>
-            </Menu>
         </menus>
       </MenuBar>
    </children>
