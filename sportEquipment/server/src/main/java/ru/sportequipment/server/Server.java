@@ -113,11 +113,8 @@ public class Server {
             try {
                 socketOutput = new ObjectOutputStream(socket.getOutputStream());
                 socketInput = new ObjectInputStream(socket.getInputStream());
-
-                CommandRequest request = receiveRequest(socketInput);
                 visitor = new Visitor();
                 visitor.setRole(RoleEnum.GUEST);
-
             } catch (IOException e) {
                 throw new ApplicationException("Error while creating new Input / output Streams: " + e);
             }
@@ -125,31 +122,31 @@ public class Server {
 
         @Override
         public void run() {
+            logger.debug("New client connected! Client id = " + clientId);
             boolean keepGoing = true;
             CommandRequest request;
             while (keepGoing) {
                 try {
                     request = receiveRequest(socketInput);
-                } catch (ApplicationException e) {
-                    logger.error(e);
-                    break;
-                }
-
-                CommandResponse response = null;
-                ActionFactory actionFactory = new ActionFactory();
-                ActionCommand command = actionFactory.defineCommand(request);
+                    logger.debug("request: " + request);
+                    CommandResponse response = null;
+                    ActionFactory actionFactory = new ActionFactory();
+                    ActionCommand command = actionFactory.defineCommand(request);
 
 
-                response = command.execute(request, response);
+                    response = command.execute(request, response);
 
-                try {
-                    if (response != null) {
-                        answer(response, clientId);
-                    } else {
-                        answer(new CommandResponse(ResponseStatus.BAD_REQUEST), clientId);
+                    try {
+                        if (response != null) {
+                            answer(response, clientId);
+                        } else {
+                            answer(new CommandResponse("Something went wrong!", ResponseStatus.BAD_REQUEST), clientId);
+                        }
+                    } catch (InterruptedException e) {
+                        logger.error("Can not send response " + e);
                     }
-                } catch (InterruptedException e) {
-                    logger.error("Can not send response " + e);
+                } catch (ApplicationException e) {
+                    //logger.warn(e);
                 }
             }
 

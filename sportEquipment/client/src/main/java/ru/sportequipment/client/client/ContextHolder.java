@@ -2,16 +2,16 @@ package ru.sportequipment.client.client;
 
 import ru.sportequipment.entity.CommandResponse;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class ContextHolder {
     private static Client client;
     private static Thread server;
 
-    private static Stack<CommandResponse> responseStack;
+    private static Deque<CommandResponse> responseStack;
 
     public ContextHolder() {
-        responseStack = new Stack<>();
     }
 
     public static Client getClient() {
@@ -30,11 +30,14 @@ public class ContextHolder {
         ContextHolder.server = server;
     }
 
-    public static Stack<CommandResponse> getResponseStack() {
+    public static Deque<CommandResponse> getResponseStack() {
+        if (responseStack == null) {
+            responseStack = new ArrayDeque<>();
+        }
         return responseStack;
     }
 
-    public static void setResponseStack(Stack<CommandResponse> response) {
-        responseStack = response;
+    public static void setResponseStack(Deque<CommandResponse> stack) {
+        responseStack = stack;
     }
 }

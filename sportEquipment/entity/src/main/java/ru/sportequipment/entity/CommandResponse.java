@@ -2,7 +2,11 @@ package ru.sportequipment.entity;
 
 import ru.sportequipment.entity.enums.ResponseStatus;
 
-public class CommandResponse {
+import java.util.Objects;
+
+public class CommandResponse extends SocketEntity {
+    private static final long serialVersionUID = 205242440943911308L;
+
     private String fromCommand;
     private String body;
     private ResponseStatus status;
@@ -56,5 +60,29 @@ public class CommandResponse {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CommandResponse that = (CommandResponse) o;
+        return fromCommand.equals(that.fromCommand) &&
+                Objects.equals(body, that.body) &&
+                status == that.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fromCommand, body, status);
+    }
+
+    @Override
+    public String toString() {
+        return "CommandResponse{" +
+                "fromCommand='" + fromCommand + '\'' +
+                ", body='" + body + '\'' +
+                ", status=" + status +
+                '}';
     }
 }

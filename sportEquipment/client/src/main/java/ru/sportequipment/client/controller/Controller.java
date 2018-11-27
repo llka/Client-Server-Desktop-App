@@ -4,6 +4,7 @@ import ru.sportequipment.client.client.ContextHolder;
 import ru.sportequipment.entity.CommandResponse;
 
 import java.util.EmptyStackException;
+import java.util.NoSuchElementException;
 
 public class Controller {
 
@@ -14,7 +15,7 @@ public class Controller {
                 if (response != null) {
                     return response;
                 }
-            } catch (EmptyStackException e) {
+            } catch (EmptyStackException | NoSuchElementException e) {
 
             }
         }

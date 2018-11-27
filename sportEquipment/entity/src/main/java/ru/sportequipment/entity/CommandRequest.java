@@ -2,8 +2,11 @@ package ru.sportequipment.entity;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
-public class CommandRequest {
+public class CommandRequest extends SocketEntity {
+    private static final long serialVersionUID = 105242440943911309L;
+
     private String command;
     private String body;
     private Map<String, String> parameters;
@@ -63,5 +66,29 @@ public class CommandRequest {
 
     public String getParameter(String key) {
         return parameters.get(key);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CommandRequest that = (CommandRequest) o;
+        return command.equals(that.command) &&
+                Objects.equals(body, that.body) &&
+                Objects.equals(parameters, that.parameters);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(command, body, parameters);
+    }
+
+    @Override
+    public String toString() {
+        return "CommandRequest{" +
+                "command='" + command + '\'' +
+                ", body='" + body + '\'' +
+                ", parameters=" + parameters +
+                '}';
     }
 }
