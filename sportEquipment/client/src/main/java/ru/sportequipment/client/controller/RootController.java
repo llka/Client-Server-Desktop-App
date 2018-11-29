@@ -99,24 +99,22 @@ public class RootController {
 
     @FXML
     void login(ActionEvent event) {
-        // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Login Dialog");
 
-
-// Set the button types.
         ButtonType loginButtonType = new ButtonType("Login", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
-// Create the username and password labels and fields.
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 150, 10, 10));
+
         TextField email = new TextField();
         email.setPromptText("Email");
         PasswordField password = new PasswordField();
         password.setPromptText("Password");
+
         grid.add(new Label("Email:"), 0, 0);
         grid.add(email, 1, 0);
         grid.add(new Label("Password:"), 0, 1);
@@ -130,11 +128,13 @@ public class RootController {
         email.textProperty().addListener((observable, oldValue, newValue) -> {
             loginButton.setDisable(newValue.trim().isEmpty());
         });
+
         dialog.getDialogPane().setContent(grid);
 
         // Request focus on the username field by default.
         Platform.runLater(() -> email.requestFocus());
 
+        // Convert the result to a email-password-pair when the login button is clicked.
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == loginButtonType) {
                 return new Pair<>(email.getText(), password.getText());
@@ -144,15 +144,21 @@ public class RootController {
 
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
-        result.ifPresent(emailAndPassword -> {
-            Map<String, String> params = new HashMap<>();
-            params.put("email", emailAndPassword.getKey());
-            params.put("password", emailAndPassword.getValue());
-            try {
-                ContextHolder.getClient().sendRequest(new CommandRequest("LOGIN", null, params));
-                logger.debug("email=" + emailAndPassword.getKey() + ", Password=" + emailAndPassword.getValue());
+//        result.ifPresent(usernamePassword -> {
+//            logger.debug("Email=" + usernamePassword.getKey() + ", Password=" + usernamePassword.getValue());
+//        });
 
+        result.ifPresent(emailAndPasswordPair -> {
+            Map<String, String> params = new HashMap<>();
+            params.put("email", emailAndPasswordPair.getKey());
+            params.put("password", emailAndPasswordPair.getValue());
+            try {
+                logger.debug("email=" + emailAndPasswordPair.getKey() + ", Password=" + emailAndPasswordPair.getValue());
+                ContextHolder.getClient().sendRequest(new CommandRequest("LOGIN", null, params));
+
+                logger.debug("Request sent");
                 CommandResponse response = Controller.getLastResponse();
+                logger.debug("Response " + response);
                 if (response.getStatus().is2xxSuccessful()) {
                     alert("Successfully logged in!");
                     logger.debug(JsonUtil.deserialize(response.getBody(), Contact.class).toString());
@@ -163,8 +169,6 @@ public class RootController {
             } catch (ClientException e) {
                 alert(Alert.AlertType.ERROR, "Cannot login", e.getMessage());
             }
-
-
         });
 
 

@@ -58,22 +58,12 @@ public class Client {
         } catch (IOException e) {
             throw new ClientException("Exception creating new Input/output Streams.", e);
         }
-
-//        new Thread(new ServerMessagesListener(socketInput)).start();
-
-//        try {
-//            Map<String, String> params = new HashMap<>();
-//            params.put("portNumber", String.valueOf(portNumber));
-//            sendRequest(new CommandRequest("CONNECT", null, params));
-//        } catch (ClientException e) {
-//            disconnect();
-//            throw new ClientException("Error while logging in.", e);
-//        }
     }
 
     public void sendRequest(CommandRequest request) throws ClientException {
         try {
             socketOutput.writeObject(request);
+            logger.debug("sendRequest " + request);
         } catch (IOException e) {
             throw new ClientException("Exception sending request to server.", e);
         }

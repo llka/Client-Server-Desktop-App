@@ -22,15 +22,15 @@ public class ContactDAO {
     private static final Logger logger = LogManager.getLogger(ContactDAO.class);
 
     private static final String LOGIN = "SELECT `contact_id`, `first_name`, `last_name`, `email`, `password`, `role`" +
-            " FROM `contact` WHERE `email` = ? AND `password` = ?)";
+            " FROM `contact` WHERE `email` = ? AND `password` = ?";
     private static final String REGISTER = "INSERT INTO `contact`(`first_name`, `last_name`, `email`, `password`, `role`)" +
             " VALUES (?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE `contact` SET `first_name` = ? `last_name` = ?, `email` = ?," +
             " `password` = ?, `role` = ? WHERE `contact_id` = ?";
     private static final String GET_BY_EMAIL = "SELECT `contact_id`, `first_name`, `last_name`, `email`, `password`, `role`" +
-            " FROM `contact` WHERE `email` = ?)";
+            " FROM `contact` WHERE `email` = ?";
     private static final String GET_BY_ID = "SELECT `contact_id`, `first_name`, `last_name`, `email`, `password`, `role`" +
-            " FROM `contact` WHERE `contact_id` = ?)";
+            " FROM `contact` WHERE `contact_id` = ?";
     private static final String GET_ALL = "SELECT `contact_id`, `first_name`, `last_name`, `email`, `password`, `role` " +
             "FROM `contact`";
     private static final String DELETE = "DELETE FROM `contact` WHERE `contact_id`= ?";

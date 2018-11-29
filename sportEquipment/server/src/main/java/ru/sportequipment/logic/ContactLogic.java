@@ -1,6 +1,5 @@
 package ru.sportequipment.logic;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import ru.sportequipment.dao.ContactDAO;
@@ -28,7 +27,7 @@ public class ContactLogic {
     }
 
     public Contact login(String email, String password) throws ApplicationException {
-        if (contactDAO.login(email, encodePassword(password, email))) {
+        if (contactDAO.login(email, password)) {
             return fetchContactsEquipment(contactDAO.getByEmail(email));
         } else {
             throw new ApplicationException("Wrong email or password!", ResponseStatus.BAD_REQUEST);
@@ -36,7 +35,7 @@ public class ContactLogic {
     }
 
     public Contact register(Contact contact) throws ApplicationException {
-        contactDAO.register(encodePassword(contact));
+        contactDAO.register(contact);
         return fetchContactsEquipment(contactDAO.getByEmail(contact.getEmail()));
     }
 
@@ -55,11 +54,6 @@ public class ContactLogic {
     public Contact update(Contact contact) throws ApplicationException {
         if (contactDAO.getByEmail(contact.getEmail()) == null) {
             throw new ApplicationException("You can not change email!", ResponseStatus.BAD_REQUEST);
-        }
-
-        if (!encodePassword(contact.getPassword(), contact.getEmail())
-                .equals(contactDAO.getByEmail(contact.getEmail()).getPassword())) {
-            encodePassword(contact);
         }
 
         contactDAO.update(contact);
@@ -82,24 +76,24 @@ public class ContactLogic {
         }
     }
 
-    private String encodePassword(String password, String email) {
-        logger.debug("decoded password: " + password);
-        password = encodeWithSHA512(password, email);
-        logger.debug("encoded password: " + password);
-        return password;
-    }
 
-    private Contact encodePassword(Contact contact) {
-        logger.debug("decoded password: " + contact.getPassword());
-        contact.setPassword(encodeWithSHA512(contact.getPassword(), contact.getEmail()));
-        logger.debug("encoded password: " + contact.getPassword());
-        return contact;
-    }
-
-
-    private String encodeWithSHA512(String data, String salt) {
-        return DigestUtils.sha512Hex(data + salt);
-    }
+//    private String encodePassword(String password, String email) {
+//        logger.debug("decoded password: " + password);
+//        password = encodeWithSHA512(password, email);
+//        logger.debug("encoded password: " + password);
+//        return password;
+//    }
+//
+//    private Contact encodePassword(Contact contact) {
+//        logger.debug("decoded password: " + contact.getPassword());
+//        contact.setPassword(encodeWithSHA512(contact.getPassword(), contact.getEmail()));
+//        logger.debug("encoded password: " + contact.getPassword());
+//        return contact;
+//    }
+//
+//    private String encodeWithSHA512(String data, String salt) {
+//        return DigestUtils.sha512Hex(data + salt);
+//    }
 
 
 }

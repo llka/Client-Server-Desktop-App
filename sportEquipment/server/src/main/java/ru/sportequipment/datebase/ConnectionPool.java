@@ -7,6 +7,7 @@ import ru.sportequipment.exception.ApplicationException;
 import ru.sportequipment.exception.CriticalException;
 
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -36,8 +37,8 @@ public class ConnectionPool {
         takenConnections = new ArrayBlockingQueue<>(dbInitializer.POOL_SIZE);
 
         try {
-            DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-        } catch (SQLException e) {
+            DriverManager.registerDriver((Driver) Class.forName(dbInitializer.DRIVER).newInstance());
+        } catch (SQLException | ClassNotFoundException | IllegalAccessException | InstantiationException e) {
             logger.fatal("Registration database driver error" + e);
             throw new CriticalException("Error while initializing Mysql Driver " + e);
         }

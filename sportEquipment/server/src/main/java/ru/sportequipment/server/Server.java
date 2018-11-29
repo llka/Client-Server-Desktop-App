@@ -126,6 +126,7 @@ public class Server {
 
         @Override
         public void run() {
+            logger.debug("New client connected! Client id = " + clientId);
             boolean keepGoing = true;
             CommandRequest request;
             while (keepGoing) {
