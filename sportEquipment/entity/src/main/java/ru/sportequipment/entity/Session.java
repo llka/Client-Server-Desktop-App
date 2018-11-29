@@ -1,7 +1,5 @@
-package ru.sportequipment.context;
+package ru.sportequipment.entity;
 
-
-import ru.sportequipment.entity.Visitor;
 
 public class Session {
     private Visitor visitor;

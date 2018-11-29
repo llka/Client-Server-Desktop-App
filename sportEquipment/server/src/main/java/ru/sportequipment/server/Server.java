@@ -3,9 +3,9 @@ package ru.sportequipment.server;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import ru.sportequipment.command.ActionCommand;
-import ru.sportequipment.context.Session;
 import ru.sportequipment.entity.CommandRequest;
 import ru.sportequipment.entity.CommandResponse;
+import ru.sportequipment.entity.Session;
 import ru.sportequipment.entity.Visitor;
 import ru.sportequipment.entity.enums.ResponseStatus;
 import ru.sportequipment.entity.enums.RoleEnum;
@@ -115,6 +115,7 @@ public class Server {
                 socketOutput = new ObjectOutputStream(socket.getOutputStream());
                 socketInput = new ObjectInputStream(socket.getInputStream());
 
+                session = new Session();
                 Visitor visitor = new Visitor();
                 visitor.setRole(RoleEnum.GUEST);
                 session.setVisitor(visitor);
@@ -134,6 +135,12 @@ public class Server {
                     request = receiveRequest(socketInput);
                 } catch (ApplicationException e) {
                     logger.error(e);
+                    logger.info("Client" + clientId + " disconnected");
+                    try {
+                        disconnect();
+                    } catch (ApplicationException e1) {
+                        logger.error(e);
+                    }
                     break;
                 }
 
@@ -151,7 +158,8 @@ public class Server {
                         answer(new CommandResponse(ResponseStatus.BAD_REQUEST), clientId);
                     }
 
-                    logger.debug("session " + session);
+                    logger.debug("server session " + session);
+
                 } catch (ApplicationException e) {
                     logger.info("Exception response: " + e);
                     answer(new CommandResponse(e.getMessage(), e.getStatus()), clientId);
@@ -216,7 +224,7 @@ public class Server {
             } catch (IOException e) {
                 throw new ApplicationException("Error while closing socket" + e, ResponseStatus.INTERNAL_SERVER_ERROR);
             }
-            connectionsCount.decrementAndGet();
+            //connectionsCount.decrementAndGet();
         }
 
         private void sendResponse(CommandResponse response) throws ApplicationException {

@@ -2,11 +2,7 @@ package ru.sportequipment.command.user;
 
 import ru.sportequipment.command.ActionCommand;
 import ru.sportequipment.command.CommandType;
-import ru.sportequipment.context.Session;
-import ru.sportequipment.entity.CommandRequest;
-import ru.sportequipment.entity.CommandResponse;
-import ru.sportequipment.entity.Contact;
-import ru.sportequipment.entity.Stick;
+import ru.sportequipment.entity.*;
 import ru.sportequipment.entity.enums.ResponseStatus;
 import ru.sportequipment.exception.ApplicationException;
 import ru.sportequipment.logic.BookingLogic;

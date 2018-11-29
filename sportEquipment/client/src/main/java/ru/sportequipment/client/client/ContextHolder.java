@@ -1,6 +1,7 @@
 package ru.sportequipment.client.client;
 
 import ru.sportequipment.entity.CommandResponse;
+import ru.sportequipment.entity.Session;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -8,6 +9,7 @@ import java.util.Deque;
 public class ContextHolder {
     private static Client client;
     private static Thread server;
+    private static Session session;
 
     private static Deque<CommandResponse> responseStack;
 
@@ -39,5 +41,13 @@ public class ContextHolder {
 
     public static void setResponseStack(Deque<CommandResponse> stack) {
         responseStack = stack;
+    }
+
+    public static Session getSession() {
+        return session;
+    }
+
+    public static void setSession(Session session) {
+        ContextHolder.session = session;
     }
 }

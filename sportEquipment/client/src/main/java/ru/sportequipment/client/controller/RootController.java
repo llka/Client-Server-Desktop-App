@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 import org.apache.log4j.LogManager;
@@ -16,9 +15,8 @@ import ru.sportequipment.client.client.ContextHolder;
 import ru.sportequipment.client.exception.ClientException;
 import ru.sportequipment.client.listner.ServerResponseListener;
 import ru.sportequipment.client.util.JsonUtil;
-import ru.sportequipment.entity.CommandRequest;
-import ru.sportequipment.entity.CommandResponse;
-import ru.sportequipment.entity.Contact;
+import ru.sportequipment.entity.*;
+import ru.sportequipment.entity.enums.RoleEnum;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +28,6 @@ public class RootController {
     private static final Logger logger = LogManager.getLogger(RootController.class);
 
     private static boolean connected = false;
-    private static boolean authenticated = false;
 
     @FXML
     private MenuItem menuServerConnect;
@@ -51,7 +48,6 @@ public class RootController {
         dialog.setHeaderText("Enter server's port to connect with.");
         dialog.setContentText("Port number:");
 
-        // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
             int portNumber = 0;
@@ -68,6 +64,9 @@ public class RootController {
                 ContextHolder.getClient().connect();
                 ContextHolder.setServer(new Thread(new ServerResponseListener(ContextHolder.getClient().getSocketInput())));
                 ContextHolder.getServer().start();
+                Session session = new Session();
+                session.setVisitor(new Visitor(RoleEnum.GUEST));
+                ContextHolder.setSession(session);
 
                 connected = true;
                 menuServerConnect.setDisable(connected);
@@ -77,9 +76,8 @@ public class RootController {
                 alert("Can not connect to the server!");
                 logger.error("Can not connect to the server!" + e);
             }
-
         } else {
-            logger.info("cancelled");
+            logger.info("cancelled connection dialog");
         }
     }
 
@@ -87,6 +85,7 @@ public class RootController {
     void disconnectFromServer(ActionEvent event) {
         try {
             ContextHolder.getClient().disconnect();
+            ContextHolder.setSession(null);
             connected = false;
             menuServerConnect.setDisable(connected);
             menuServerDisonnect.setDisable(!connected);
@@ -120,11 +119,9 @@ public class RootController {
         grid.add(new Label("Password:"), 0, 1);
         grid.add(password, 1, 1);
 
-        // Enable/Disable login button depending on whether a username was entered.
         Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
         loginButton.setDisable(true);
 
-        // Do some validation (using the Java 8 lambda syntax).
         email.textProperty().addListener((observable, oldValue, newValue) -> {
             loginButton.setDisable(newValue.trim().isEmpty());
         });
@@ -144,10 +141,6 @@ public class RootController {
 
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
-//        result.ifPresent(usernamePassword -> {
-//            logger.debug("Email=" + usernamePassword.getKey() + ", Password=" + usernamePassword.getValue());
-//        });
-
         result.ifPresent(emailAndPasswordPair -> {
             Map<String, String> params = new HashMap<>();
             params.put("email", emailAndPasswordPair.getKey());
@@ -161,13 +154,17 @@ public class RootController {
                 logger.debug("Response " + response);
                 if (response.getStatus().is2xxSuccessful()) {
                     alert("Successfully logged in!");
-                    logger.debug(JsonUtil.deserialize(response.getBody(), Contact.class).toString());
+                    Contact contact = JsonUtil.deserialize(response.getBody(), Contact.class);
+                    ContextHolder.getSession().getVisitor().setContact(contact);
+                    ContextHolder.getSession().getVisitor().setRole(contact.getRole());
+                    logger.debug("session " + ContextHolder.getSession());
+                    menuLogIn.setDisable(true);
+                    menuLogOut.setDisable(false);
                 } else {
-                    alert(Alert.AlertType.ERROR, "Cannot login", response.getBody());
+                    alert(Alert.AlertType.ERROR, "Cannot login!", response.getBody());
                 }
-
             } catch (ClientException e) {
-                alert(Alert.AlertType.ERROR, "Cannot login", e.getMessage());
+                alert(Alert.AlertType.ERROR, "Cannot login!", e.getMessage());
             }
         });
 
@@ -176,7 +173,26 @@ public class RootController {
 
     @FXML
     void logOut(ActionEvent event) {
+        try {
+            ContextHolder.getClient().sendRequest(new CommandRequest("LOGOUT", null));
+            logger.debug("Request sent");
 
+            CommandResponse response = Controller.getLastResponse();
+            logger.debug("Response " + response);
+            if (response.getStatus().is2xxSuccessful()) {
+                ContextHolder.getSession().getVisitor().setContact(null);
+                ContextHolder.getSession().getVisitor().setRole(RoleEnum.GUEST);
+                menuLogIn.setDisable(false);
+                menuLogOut.setDisable(true);
+                logger.debug("session " + ContextHolder.getSession());
+                alert("Successfully logged out!");
+            } else {
+                alert(Alert.AlertType.ERROR, "Cannot logout!", response.getBody());
+            }
+
+        } catch (ClientException e) {
+            alert(Alert.AlertType.ERROR, "Cannot logout!", e.getMessage());
+        }
     }
 
 }

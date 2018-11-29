@@ -1,8 +1,8 @@
 package ru.sportequipment.command;
 
-import ru.sportequipment.context.Session;
 import ru.sportequipment.entity.CommandRequest;
 import ru.sportequipment.entity.CommandResponse;
+import ru.sportequipment.entity.Session;
 import ru.sportequipment.exception.ApplicationException;
 
 public interface ActionCommand {
