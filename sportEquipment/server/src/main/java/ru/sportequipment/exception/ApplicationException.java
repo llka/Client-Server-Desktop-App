@@ -1,18 +1,35 @@
 package ru.sportequipment.exception;
 
+import ru.sportequipment.entity.enums.ResponseStatus;
+
 public class ApplicationException extends Exception {
-    public ApplicationException() {
+
+    private ResponseStatus status;
+
+    public ApplicationException(ResponseStatus status) {
+        this.status = status;
     }
 
-    public ApplicationException(String message) {
+    public ApplicationException(String message, ResponseStatus status) {
         super(message);
+        this.status = status;
     }
 
-    public ApplicationException(String message, Throwable cause) {
+    public ApplicationException(String message, Throwable cause, ResponseStatus status) {
         super(message, cause);
+        this.status = status;
     }
 
-    public ApplicationException(Throwable cause) {
+    public ApplicationException(Throwable cause, ResponseStatus status) {
         super(cause);
+        this.status = status;
+    }
+
+    public ResponseStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ResponseStatus status) {
+        this.status = status;
     }
 }

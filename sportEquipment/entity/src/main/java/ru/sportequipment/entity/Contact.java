@@ -6,8 +6,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public class Contact implements DatabaseEntity {
     private int id;
@@ -22,7 +22,7 @@ public class Contact implements DatabaseEntity {
     private String password;
     @NotNull
     private RoleEnum role;
-    private Set<Equipment> bookedEquipment;
+    private List<Equipment> bookedEquipment;
 
     public Contact() {
     }
@@ -75,11 +75,11 @@ public class Contact implements DatabaseEntity {
         this.role = role;
     }
 
-    public Set<Equipment> getBookedEquipment() {
+    public List<Equipment> getBookedEquipment() {
         return bookedEquipment;
     }
 
-    public void setBookedEquipment(Set<Equipment> bookedEquipment) {
+    public void setBookedEquipment(List<Equipment> bookedEquipment) {
         this.bookedEquipment = bookedEquipment;
     }
 

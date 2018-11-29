@@ -11,6 +11,14 @@ public class Stick extends Equipment implements DatabaseEntity {
     public Stick() {
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public StickType getStickType() {
         return stickType;
     }

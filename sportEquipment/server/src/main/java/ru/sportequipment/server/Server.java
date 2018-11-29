@@ -3,13 +3,14 @@ package ru.sportequipment.server;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import ru.sportequipment.command.ActionCommand;
-import ru.sportequipment.command.ActionFactory;
+import ru.sportequipment.context.Session;
 import ru.sportequipment.entity.CommandRequest;
 import ru.sportequipment.entity.CommandResponse;
 import ru.sportequipment.entity.Visitor;
 import ru.sportequipment.entity.enums.ResponseStatus;
 import ru.sportequipment.entity.enums.RoleEnum;
 import ru.sportequipment.exception.ApplicationException;
+import ru.sportequipment.factory.ActionFactory;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -62,7 +63,7 @@ public class Server {
                  returns a reference to this new Socket. A TCP connection now exists between the client and
                  the server, and communication can begin.*/
                 } catch (IOException e) {
-                    throw new ApplicationException("Can not accept Server Socket.", e);
+                    throw new ApplicationException("Can not accept Server Socket.", e, ResponseStatus.INTERNAL_SERVER_ERROR);
                 }
                 if (!isServerWorking.get()) {
                     break;
@@ -77,7 +78,7 @@ public class Server {
                 }
             }
         } catch (IOException e) {
-            throw new ApplicationException("Can not init ServerSocket on port number: " + portNumber, e);
+            throw new ApplicationException("Can not init ServerSocket on port number: " + portNumber + " " + e, ResponseStatus.INTERNAL_SERVER_ERROR);
         }
 
         isServerWorking.set(false);
@@ -104,7 +105,7 @@ public class Server {
         private ObjectOutputStream socketOutput;
 
         private Integer clientId;
-        private Visitor visitor;
+        private Session session;
 
         public ClientThread(Socket socket) throws ApplicationException {
             this.clientId = connectionsCount.incrementAndGet();
@@ -114,12 +115,12 @@ public class Server {
                 socketOutput = new ObjectOutputStream(socket.getOutputStream());
                 socketInput = new ObjectInputStream(socket.getInputStream());
 
-                CommandRequest request = receiveRequest(socketInput);
-                visitor = new Visitor();
+                Visitor visitor = new Visitor();
                 visitor.setRole(RoleEnum.GUEST);
+                session.setVisitor(visitor);
 
             } catch (IOException e) {
-                throw new ApplicationException("Error while creating new Input / output Streams: " + e);
+                throw new ApplicationException("Error while creating new Input / output Streams: " + e, ResponseStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
@@ -137,20 +138,24 @@ public class Server {
 
                 CommandResponse response = null;
                 ActionFactory actionFactory = new ActionFactory();
-                ActionCommand command = actionFactory.defineCommand(request);
 
-
-                response = command.execute(request, response);
-
+                ActionCommand command = null;
                 try {
+                    command = actionFactory.defineCommand(request, session.getVisitor());
+                    response = command.execute(request, response, session);
+
                     if (response != null) {
                         answer(response, clientId);
                     } else {
                         answer(new CommandResponse(ResponseStatus.BAD_REQUEST), clientId);
                     }
-                } catch (InterruptedException e) {
-                    logger.error("Can not send response " + e);
+
+                    logger.debug("session " + session);
+                } catch (ApplicationException e) {
+                    logger.info("Exception response: " + e);
+                    answer(new CommandResponse(e.getMessage(), e.getStatus()), clientId);
                 }
+
             }
 
             try {
@@ -168,19 +173,23 @@ public class Server {
             }
         }
 
-        private void answer(CommandResponse response, int clientId) throws InterruptedException {
+        private void answer(CommandResponse response, int clientId) {
 
-            semaphore.acquire();
-
-            ClientThread client = clientThreads.get(clientId);
             try {
-                client.sendResponse(response);
-            } catch (ApplicationException e) {
-                logger.error("Cannot answer to client with id = " + clientId);
-                clientThreads.remove(clientId);
-            }
+                semaphore.acquire();
 
-            semaphore.release();
+                ClientThread client = clientThreads.get(clientId);
+                try {
+                    client.sendResponse(response);
+                } catch (ApplicationException e) {
+                    logger.error("Cannot answer to client with id = " + clientId);
+                    clientThreads.remove(clientId);
+                }
+
+                semaphore.release();
+            } catch (InterruptedException e) {
+                logger.error("Can not send response " + e);
+            }
         }
 
 
@@ -190,21 +199,21 @@ public class Server {
                     socketInput.close();
                 }
             } catch (IOException e) {
-                throw new ApplicationException("Error while closing socketInput" + e);
+                throw new ApplicationException("Error while closing socketInput" + e, ResponseStatus.INTERNAL_SERVER_ERROR);
             }
             try {
                 if (socketOutput != null) {
                     socketOutput.close();
                 }
             } catch (IOException e) {
-                throw new ApplicationException("Error while closing socketOutput" + e);
+                throw new ApplicationException("Error while closing socketOutput" + e, ResponseStatus.INTERNAL_SERVER_ERROR);
             }
             try {
                 if (socket != null) {
                     socket.close();
                 }
             } catch (IOException e) {
-                throw new ApplicationException("Error while closing socket" + e);
+                throw new ApplicationException("Error while closing socket" + e, ResponseStatus.INTERNAL_SERVER_ERROR);
             }
             connectionsCount.decrementAndGet();
         }
@@ -212,13 +221,13 @@ public class Server {
         private void sendResponse(CommandResponse response) throws ApplicationException {
             if (!socket.isConnected()) {
                 disconnect();
-                throw new ApplicationException("Socket is closed!");
+                throw new ApplicationException("Socket is closed!", ResponseStatus.INTERNAL_SERVER_ERROR);
             }
 
             try {
                 socketOutput.writeObject(response);
             } catch (IOException e) {
-                throw new ApplicationException("Error while sending message from " + visitor);
+                throw new ApplicationException("Error while sending response for " + session.getVisitor(), ResponseStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
@@ -226,7 +235,7 @@ public class Server {
             try {
                 return (CommandRequest) inputStream.readObject();
             } catch (IOException | ClassNotFoundException e) {
-                throw new ApplicationException("Can not receive request!");
+                throw new ApplicationException("Can not receive request!", ResponseStatus.BAD_REQUEST);
             }
         }
 
@@ -262,12 +271,12 @@ public class Server {
             this.clientId = clientId;
         }
 
-        public Visitor getVisitor() {
-            return visitor;
+        public Session getSession() {
+            return session;
         }
 
-        public void setVisitor(Visitor visitor) {
-            this.visitor = visitor;
+        public void setSession(Session session) {
+            this.session = session;
         }
     }
 }

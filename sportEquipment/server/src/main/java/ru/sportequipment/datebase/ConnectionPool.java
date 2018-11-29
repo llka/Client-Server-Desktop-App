@@ -2,6 +2,7 @@ package ru.sportequipment.datebase;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import ru.sportequipment.entity.enums.ResponseStatus;
 import ru.sportequipment.exception.ApplicationException;
 import ru.sportequipment.exception.CriticalException;
 
@@ -48,6 +49,7 @@ public class ConnectionPool {
             } catch (SQLException | InterruptedException e) {
                 logger.error("Can't get connection " + e);
             }
+
         }
 
         if (connectionAmount < 1) {
@@ -125,7 +127,7 @@ public class ConnectionPool {
                 closePoolLock.unlock();
             }
         } else {
-            throw new ApplicationException("Other thread has already called closePool()");
+            throw new ApplicationException("Other thread has already called closePool()", ResponseStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

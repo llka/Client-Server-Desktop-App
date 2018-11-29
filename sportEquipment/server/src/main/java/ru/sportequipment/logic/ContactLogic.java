@@ -4,75 +4,81 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import ru.sportequipment.dao.ContactDAO;
+import ru.sportequipment.dao.SkatesDAO;
+import ru.sportequipment.dao.StickDAO;
 import ru.sportequipment.entity.Contact;
-import ru.sportequipment.exception.DataBaseException;
-import ru.sportequipment.exception.LogicException;
+import ru.sportequipment.entity.Equipment;
+import ru.sportequipment.entity.enums.ResponseStatus;
+import ru.sportequipment.exception.ApplicationException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ContactLogic {
     private static final Logger logger = LogManager.getLogger(ContactLogic.class);
 
     private ContactDAO contactDAO;
+    private StickDAO stickDAO;
+    private SkatesDAO skatesDAO;
 
     public ContactLogic() {
         contactDAO = new ContactDAO();
+        stickDAO = new StickDAO();
+        skatesDAO = new SkatesDAO();
     }
 
-    public Contact login(String email, String password) throws LogicException {
-        try {
-            if (contactDAO.login(email, encodePassword(password, email))) {
-                return contactDAO.getByEmail(email);
-            } else {
-                throw new LogicException("Wrong email or password!");
-            }
-        } catch (DataBaseException e) {
-            throw new LogicException("Cannot login!");
+    public Contact login(String email, String password) throws ApplicationException {
+        if (contactDAO.login(email, encodePassword(password, email))) {
+            return fetchContactsEquipment(contactDAO.getByEmail(email));
+        } else {
+            throw new ApplicationException("Wrong email or password!", ResponseStatus.BAD_REQUEST);
         }
     }
 
-    public Contact register(Contact contact) throws LogicException {
-        try {
-            contactDAO.register(encodePassword(contact));
-            return contactDAO.getByEmail(contact.getEmail());
-        } catch (DataBaseException e) {
-            throw new LogicException("Cannot register!");
-        }
+    public Contact register(Contact contact) throws ApplicationException {
+        contactDAO.register(encodePassword(contact));
+        return fetchContactsEquipment(contactDAO.getByEmail(contact.getEmail()));
     }
 
-    public List<Contact> getAll() throws LogicException {
-        try {
-            return contactDAO.getAll();
-        } catch (DataBaseException e) {
-            throw new LogicException("Cannot get all contacts!");
-        }
+    public Contact getById(int contactId) throws ApplicationException {
+        return fetchContactsEquipment(contactDAO.getById(contactId));
     }
 
-    public Contact update(Contact contact) throws LogicException {
-
-        try {
-
-            if (contactDAO.getByEmail(contact.getEmail()) == null) {
-                throw new LogicException("You can not change email!");
-            }
-
-            if (!encodePassword(contact.getPassword(), contact.getEmail())
-                    .equals(contactDAO.getByEmail(contact.getEmail()).getPassword())) {
-                encodePassword(contact);
-            }
-
-            contactDAO.update(contact);
-            return contactDAO.getByEmail(contact.getEmail());
-        } catch (DataBaseException e) {
-            throw new LogicException("Cannot update contact");
+    public List<Contact> getAll() throws ApplicationException {
+        List<Contact> contacts = contactDAO.getAll();
+        for (Contact contact : contacts) {
+            fetchContactsEquipment(contact);
         }
+        return contacts;
     }
 
-    public void delete(Contact contact) throws LogicException {
-        try {
-            contactDAO.deleteById(contact.getId());
-        } catch (DataBaseException e) {
-            throw new LogicException("Cannot delete contact!");
+    public Contact update(Contact contact) throws ApplicationException {
+        if (contactDAO.getByEmail(contact.getEmail()) == null) {
+            throw new ApplicationException("You can not change email!", ResponseStatus.BAD_REQUEST);
+        }
+
+        if (!encodePassword(contact.getPassword(), contact.getEmail())
+                .equals(contactDAO.getByEmail(contact.getEmail()).getPassword())) {
+            encodePassword(contact);
+        }
+
+        contactDAO.update(contact);
+        return fetchContactsEquipment(contactDAO.getByEmail(contact.getEmail()));
+    }
+
+    public void delete(Contact contact) throws ApplicationException {
+        contactDAO.deleteById(contact.getId());
+    }
+
+    private Contact fetchContactsEquipment(Contact contact) throws ApplicationException {
+        if (contact != null) {
+            List<Equipment> equipment = new ArrayList<>();
+            equipment.addAll(skatesDAO.getContactsSkates(contact.getId()));
+            equipment.addAll(stickDAO.getContactsSticks(contact.getId()));
+            contact.setBookedEquipment(equipment);
+            return contact;
+        } else {
+            throw new ApplicationException("Contact is null!", ResponseStatus.BAD_REQUEST);
         }
     }
 
@@ -89,6 +95,7 @@ public class ContactLogic {
         logger.debug("encoded password: " + contact.getPassword());
         return contact;
     }
+
 
     private String encodeWithSHA512(String data, String salt) {
         return DigestUtils.sha512Hex(data + salt);

@@ -1,6 +1,7 @@
 package ru.sportequipment.builder;
 
 
+import ru.sportequipment.entity.enums.ResponseStatus;
 import ru.sportequipment.exception.ApplicationException;
 import ru.sportequipment.server.Server;
 
@@ -15,14 +16,14 @@ public class ServerBuilder implements ServerBuilderInterface {
                 try {
                     server = new Server(Integer.parseInt(arguments[ARG_PORT_NUMBER_INDEX]));
                 } catch (NumberFormatException e) {
-                    throw new ApplicationException("Invalid port number.");
+                    throw new ApplicationException("Invalid port number.", ResponseStatus.INTERNAL_SERVER_ERROR);
                 }
                 break;
             case 0:
                 server = new Server();
                 break;
             default:
-                throw new ApplicationException("Invalid number of arguments!");
+                throw new ApplicationException("Invalid number of arguments!", ResponseStatus.INTERNAL_SERVER_ERROR);
         }
         return server;
     }

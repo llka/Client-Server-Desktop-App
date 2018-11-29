@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 import org.apache.log4j.LogManager;
@@ -98,10 +99,16 @@ public class RootController {
 
     @FXML
     void login(ActionEvent event) {
+        // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Login Dialog");
+
+
+// Set the button types.
         ButtonType loginButtonType = new ButtonType("Login", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+
+// Create the username and password labels and fields.
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
@@ -110,6 +117,10 @@ public class RootController {
         email.setPromptText("Email");
         PasswordField password = new PasswordField();
         password.setPromptText("Password");
+        grid.add(new Label("Email:"), 0, 0);
+        grid.add(email, 1, 0);
+        grid.add(new Label("Password:"), 0, 1);
+        grid.add(password, 1, 1);
 
         // Enable/Disable login button depending on whether a username was entered.
         Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
@@ -123,6 +134,13 @@ public class RootController {
 
         // Request focus on the username field by default.
         Platform.runLater(() -> email.requestFocus());
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == loginButtonType) {
+                return new Pair<>(email.getText(), password.getText());
+            }
+            return null;
+        });
 
         Optional<Pair<String, String>> result = dialog.showAndWait();
 

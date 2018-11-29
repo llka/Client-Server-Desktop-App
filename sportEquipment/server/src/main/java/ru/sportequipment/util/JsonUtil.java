@@ -2,6 +2,7 @@ package ru.sportequipment.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ru.sportequipment.entity.enums.ResponseStatus;
 import ru.sportequipment.exception.ApplicationException;
 import ru.sportequipment.exception.CriticalException;
 
@@ -22,7 +23,7 @@ public class JsonUtil {
         try {
             return mapper.readValue(json, type);
         } catch (IOException e) {
-            throw new ApplicationException("Cannot create object from " + json);
+            throw new ApplicationException("Cannot create object from " + json, ResponseStatus.BAD_REQUEST);
         }
     }
 

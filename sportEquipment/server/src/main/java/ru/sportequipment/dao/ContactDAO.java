@@ -4,11 +4,13 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import ru.sportequipment.datebase.ConnectionPool;
 import ru.sportequipment.entity.Contact;
+import ru.sportequipment.entity.enums.ResponseStatus;
 import ru.sportequipment.entity.enums.RoleEnum;
 import ru.sportequipment.exception.DataBaseException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,7 +42,7 @@ public class ContactDAO {
     private static final String COLUMN_PASSWORD = "password";
     private static final String COLUMN_ROLE = "role";
 
-    public boolean login(String email, String password) throws DataBaseException {
+    public boolean login(@NotBlank String email, @NotBlank String password) throws DataBaseException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(LOGIN)) {
             preparedStatement.setString(1, email);
@@ -48,7 +50,7 @@ public class ContactDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next();
         } catch (SQLException e) {
-            throw new DataBaseException("Error while logging in in database." + e);
+            throw new DataBaseException("Error while logging in in database." + e, ResponseStatus.BAD_REQUEST);
         }
     }
 
@@ -62,7 +64,7 @@ public class ContactDAO {
             preparedStatement.setString(5, contact.getRole().toString());
             preparedStatement.execute();
         } catch (SQLException e) {
-            throw new DataBaseException("Error while registering new account in database." + e);
+            throw new DataBaseException("Error while registering new account in database." + e, ResponseStatus.BAD_REQUEST);
         }
     }
 
@@ -77,7 +79,7 @@ public class ContactDAO {
             preparedStatement.setInt(6, contact.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
-            throw new DataBaseException("Error while updating contact with id = " + contact.getId() + " in database." + e);
+            throw new DataBaseException("Error while updating contact with id = " + contact.getId() + " in database." + e, ResponseStatus.BAD_REQUEST);
         }
     }
 
@@ -89,14 +91,14 @@ public class ContactDAO {
             if (resultSet.next()) {
                 return buildContact(resultSet);
             } else {
-                throw new DataBaseException("No account with such email " + email + " found in database.");
+                throw new DataBaseException("No account with such email " + email + " found in database.", ResponseStatus.NOT_FOUND);
             }
         } catch (SQLException e) {
-            throw new DataBaseException("Error while finding contact " + email + " in database." + e);
+            throw new DataBaseException("Error while finding contact " + email + " in database." + e, ResponseStatus.BAD_REQUEST);
         }
     }
 
-    public Contact getById(int id) throws DataBaseException {
+    public Contact getById(@Positive int id) throws DataBaseException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_ID)) {
             preparedStatement.setInt(1, id);
@@ -104,10 +106,10 @@ public class ContactDAO {
             if (resultSet.next()) {
                 return buildContact(resultSet);
             } else {
-                throw new DataBaseException("No account with such id " + id + " found in database.");
+                throw new DataBaseException("No account with such id " + id + " found in database.", ResponseStatus.NOT_FOUND);
             }
         } catch (SQLException e) {
-            throw new DataBaseException("Error while finding contact " + id + " in database." + e);
+            throw new DataBaseException("Error while finding contact " + id + " in database." + e, ResponseStatus.BAD_REQUEST);
         }
     }
 
@@ -121,17 +123,17 @@ public class ContactDAO {
             }
             return contacts;
         } catch (SQLException e) {
-            throw new DataBaseException("Error while loading all accounts from database." + e);
+            throw new DataBaseException("Error while loading all accounts from database." + e, ResponseStatus.BAD_REQUEST);
         }
     }
 
-    public void deleteById(int contactId) throws DataBaseException {
+    public void deleteById(@Positive int contactId) throws DataBaseException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE)) {
             preparedStatement.setInt(1, contactId);
             preparedStatement.execute();
         } catch (SQLException e) {
-            throw new DataBaseException("Error while deleting contact  " + contactId + " " + e);
+            throw new DataBaseException("Error while deleting contact  " + contactId + " " + e, ResponseStatus.BAD_REQUEST);
         }
     }
 
@@ -147,7 +149,7 @@ public class ContactDAO {
             contact.setRole(RoleEnum.valueOf(resultSet.getString(COLUMN_ROLE)));
             return contact;
         } catch (SQLException e) {
-            throw new DataBaseException("Error while building contact!" + e);
+            throw new DataBaseException("Error while building contact!" + e, ResponseStatus.BAD_REQUEST);
         }
     }
 

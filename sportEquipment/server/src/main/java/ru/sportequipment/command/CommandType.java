@@ -1,6 +1,10 @@
 package ru.sportequipment.command;
 
 import ru.sportequipment.command.guest.LogInCommand;
+import ru.sportequipment.command.guest.RegisterCommand;
+import ru.sportequipment.command.user.BookSkatesCommand;
+import ru.sportequipment.command.user.BookSticksCommand;
+import ru.sportequipment.command.user.LogOutCommand;
 import ru.sportequipment.entity.enums.RoleEnum;
 
 import java.util.EnumSet;
@@ -13,19 +17,30 @@ public enum CommandType {
             this.role = EnumSet.of(RoleEnum.GUEST);
         }
     },
-    //    REGISTER {
-//        {
-//            this.command = new RegisterCommand();
-//            this.role = EnumSet.of(RoleEnum.GUEST);
-//        }
-//    },
-//
-//    LOGOUT {
-//        {
-//            this.command = new LogOutCommand();
-//            this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
-//        }
-//    },
+    REGISTER {
+        {
+            this.command = new RegisterCommand();
+            this.role = EnumSet.of(RoleEnum.GUEST);
+        }
+    },
+    LOGOUT {
+        {
+            this.command = new LogOutCommand();
+            this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
+        }
+    },
+    BOOK_STICK {
+        {
+            this.command = new BookSticksCommand();
+            this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
+        }
+    },
+    BOOK_SKATES {
+        {
+            this.command = new BookSkatesCommand();
+            this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
+        }
+    },
     EMPTY {
         {
             this.command = new EmptyCommand();
