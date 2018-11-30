@@ -10,6 +10,7 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import ru.sportequipment.client.Main;
 import ru.sportequipment.client.client.Client;
 import ru.sportequipment.client.client.ContextHolder;
 import ru.sportequipment.client.exception.ClientException;
@@ -29,6 +30,17 @@ public class RootController {
 
     private static boolean connected = false;
 
+    //Reference to the main application
+    private Main main;
+
+    //Is called by the main application to give a reference back to itself.
+    public void setMain(Main main) {
+        this.main = main;
+    }
+
+    @FXML
+    private MenuItem menuMyProfile;
+
     @FXML
     private MenuItem menuServerConnect;
 
@@ -36,10 +48,16 @@ public class RootController {
     private MenuItem menuLogOut;
 
     @FXML
-    private MenuItem menuServerDisonnect;
+    private MenuItem menuServerDisconnect;
 
     @FXML
     private MenuItem menuLogIn;
+
+    @FXML
+    private MenuItem menuSkates;
+
+    @FXML
+    private MenuItem menuStick;
 
     @FXML
     void connectToServer(ActionEvent event) {
@@ -68,9 +86,7 @@ public class RootController {
                 session.setVisitor(new Visitor(RoleEnum.GUEST));
                 ContextHolder.setSession(session);
 
-                connected = true;
-                menuServerConnect.setDisable(connected);
-                menuServerDisonnect.setDisable(!connected);
+                refreshDisabledMenu();
                 alert("Successfully connected to the server!");
             } catch (ClientException e) {
                 alert("Can not connect to the server!");
@@ -86,9 +102,8 @@ public class RootController {
         try {
             ContextHolder.getClient().disconnect();
             ContextHolder.setSession(null);
-            connected = false;
-            menuServerConnect.setDisable(connected);
-            menuServerDisonnect.setDisable(!connected);
+
+            refreshDisabledMenu();
             alert("Successfully disconnected from the server!");
         } catch (ClientException e) {
             alert("Can not disconnect from the server!");
@@ -158,8 +173,7 @@ public class RootController {
                     ContextHolder.getSession().getVisitor().setContact(contact);
                     ContextHolder.getSession().getVisitor().setRole(contact.getRole());
                     logger.debug("session " + ContextHolder.getSession());
-                    menuLogIn.setDisable(true);
-                    menuLogOut.setDisable(false);
+                    refreshDisabledMenu();
                 } else {
                     alert(Alert.AlertType.ERROR, "Cannot login!", response.getBody());
                 }
@@ -182,8 +196,7 @@ public class RootController {
             if (response.getStatus().is2xxSuccessful()) {
                 ContextHolder.getSession().getVisitor().setContact(null);
                 ContextHolder.getSession().getVisitor().setRole(RoleEnum.GUEST);
-                menuLogIn.setDisable(false);
-                menuLogOut.setDisable(true);
+                refreshDisabledMenu();
                 logger.debug("session " + ContextHolder.getSession());
                 alert("Successfully logged out!");
             } else {
@@ -193,6 +206,95 @@ public class RootController {
         } catch (ClientException e) {
             alert(Alert.AlertType.ERROR, "Cannot logout!", e.getMessage());
         }
+    }
+
+    @FXML
+    void openMyProfileView(ActionEvent event) {
+        logger.debug("open profile!");
+        main.showMyProfileView();
+    }
+
+    @FXML
+    void openSkatesView(ActionEvent event) {
+        logger.debug("open openSkatesView!");
+    }
+
+    @FXML
+    void openSticksView(ActionEvent event) {
+        logger.debug("open openStickView!");
+    }
+
+    private void refreshDisabledMenu() {
+        Session session = ContextHolder.getSession();
+        if (session == null) {
+            menuServerConnect.setDisable(false);
+            menuServerDisconnect.setDisable(true);
+
+            menuLogIn.setDisable(true);
+            menuLogOut.setDisable(true);
+
+            menuMyProfile.setDisable(true);
+            menuSkates.setDisable(true);
+            menuStick.setDisable(true);
+        } else {
+            if (session.getVisitor() != null) {
+                menuServerConnect.setDisable(true);
+                menuServerDisconnect.setDisable(false);
+                switch (session.getVisitor().getRole()) {
+                    case GUEST:
+                        menuLogIn.setDisable(false);
+                        menuLogOut.setDisable(true);
+
+                        menuMyProfile.setDisable(true);
+                        menuSkates.setDisable(true);
+                        menuStick.setDisable(true);
+                        break;
+                    case USER:
+                        menuLogIn.setDisable(true);
+                        menuLogOut.setDisable(false);
+
+                        menuMyProfile.setDisable(false);
+                        menuSkates.setDisable(false);
+                        menuStick.setDisable(false);
+                        break;
+                    case ADMIN:
+                        menuLogIn.setDisable(true);
+                        menuLogOut.setDisable(false);
+
+                        menuMyProfile.setDisable(false);
+                        menuSkates.setDisable(false);
+                        menuStick.setDisable(false);
+                        break;
+                    default:
+                        logger.error("unknown role!");
+                }
+            }
+        }
+    }
+
+    //    --------------------My Profile Controller -------------------------
+    @FXML
+    private TextField seachByIdTextField;
+
+
+    @FXML
+    private Button saveChangesBtn;
+
+    @FXML
+    private TextField myFirstNameTextField;
+
+    @FXML
+    private TextField myLastNameTextField;
+
+    @FXML
+    private TextField myEmailTextField;
+
+    @FXML
+    private TextField myPasswordTextField;
+
+    @FXML
+    void saveChanges(ActionEvent event) {
+
     }
 
 }

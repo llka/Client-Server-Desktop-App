@@ -4,9 +4,11 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import ru.sportequipment.client.controller.RootController;
 
 import java.io.IOException;
 
@@ -14,15 +16,18 @@ import java.io.IOException;
 public class Main extends Application {
     private static final Logger logger = LogManager.getLogger(Main.class);
 
-    private Stage stage;
+    private static final String WINDOW_TITLE = "Sport Equipment";
 
-    private AnchorPane rootLayout;
+    private Stage window;
+    private Scene startPage;
+
+    private BorderPane rootLayout;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        this.stage = primaryStage;
-        stage.setTitle("SportEquipment");
+        this.window = primaryStage;
+        window.setTitle(WINDOW_TITLE);
 
         initRootLayout();
     }
@@ -32,18 +37,31 @@ public class Main extends Application {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("/layout/root.fxml"));
-            rootLayout = (AnchorPane) loader.load();
+            rootLayout = (BorderPane) loader.load();
 
             Scene scene = new Scene(rootLayout, 400, 300);
-            stage.setScene(scene);
+            window.setScene(scene);
 
-            /*//Give the controller access to the main.
-            RootLayoutController controller = loader.getController();
-            controller.setMain(this);*/
+            //Give the controller access to the main.
+            RootController controller = loader.getController();
+            controller.setMain(this);
 
-            stage.show();
+            window.show();
         } catch (IOException e) {
-            logger.error("Cannot init rool layout" + e);
+            logger.error("Cannot init root layout" + e);
+        }
+    }
+
+    public void showMyProfileView() {
+        logger.debug("show my profile from main");
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("/layout/myProfileView.fxml"));
+            AnchorPane myProfileView = (AnchorPane) loader.load();
+
+            rootLayout.setCenter(myProfileView);
+        } catch (IOException e) {
+            logger.error("Cannot show myProfileView" + e);
         }
     }
 

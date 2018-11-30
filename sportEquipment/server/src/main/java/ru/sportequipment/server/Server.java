@@ -135,7 +135,7 @@ public class Server {
                     request = receiveRequest(socketInput);
                 } catch (ApplicationException e) {
                     logger.error(e);
-                    logger.info("Client" + clientId + " disconnected");
+                    logger.info("Client with id = " + clientId + " disconnected");
                     try {
                         disconnect();
                     } catch (ApplicationException e1) {
