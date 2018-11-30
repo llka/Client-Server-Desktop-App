@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 import org.apache.log4j.LogManager;
@@ -210,7 +212,11 @@ public class RootController {
 
     @FXML
     void openMyProfileView(ActionEvent event) {
-        logger.debug("open profile!");
+        if (ContextHolder.getSession() == null ||
+                ContextHolder.getSession().getVisitor() == null) {
+            alert(Alert.AlertType.ERROR, "You are not authorized!", "You are not authorized!");
+        }
+        first = true;
         main.showMyProfileView();
     }
 
@@ -274,8 +280,7 @@ public class RootController {
 
     //    --------------------My Profile Controller -------------------------
     @FXML
-    private TextField seachByIdTextField;
-
+    private AnchorPane myProfilePane;
 
     @FXML
     private Button saveChangesBtn;
@@ -294,7 +299,64 @@ public class RootController {
 
     @FXML
     void saveChanges(ActionEvent event) {
+        Contact contact = ContextHolder.getSession().getVisitor().getContact();
+        contact.setFirstName(myFirstNameTextField.getText());
+        contact.setLastName(myLastNameTextField.getText());
+        contact.setPassword(myPasswordTextField.getText());
+
+        try {
+            ContextHolder.getClient().sendRequest(new CommandRequest("UPDATE_CONTACT", JsonUtil.serialize(contact)));
+            logger.debug("Request sent " + contact);
+
+
+            CommandResponse response = Controller.getLastResponse();
+            logger.debug("Response " + response);
+            if (response.getStatus().is2xxSuccessful()) {
+                Contact updatedContact = JsonUtil.deserialize(response.getBody(), Contact.class);
+                ContextHolder.getSession().getVisitor().setContact(updatedContact);
+                ContextHolder.getSession().getVisitor().setRole(updatedContact.getRole());
+                refreshDisabledMenu();
+                logger.debug("session " + ContextHolder.getSession());
+
+                myFirstNameTextField.setText(updatedContact.getFirstName());
+                myLastNameTextField.setText(updatedContact.getLastName());
+                myEmailTextField.setText(updatedContact.getEmail());
+                myPasswordTextField.setText(updatedContact.getPassword());
+
+                alert("Successfully saved changes!");
+            } else {
+                alert(Alert.AlertType.ERROR, "Cannot logout!", response.getBody());
+            }
+
+        } catch (ClientException e) {
+            alert(Alert.AlertType.ERROR, "Cannot save changes!", e.getMessage());
+        }
+
 
     }
 
+    private boolean first = true;
+
+    @FXML
+    void onMouseEntered(MouseEvent event) {
+        if (first) {
+            Contact contact = ContextHolder.getSession().getVisitor().getContact();
+
+            myFirstNameTextField.setText(contact.getFirstName());
+            myLastNameTextField.setText(contact.getLastName());
+            myEmailTextField.setText(contact.getEmail());
+            myPasswordTextField.setText(contact.getPassword());
+
+            myFirstNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+                saveChangesBtn.setDisable(newValue.trim().isEmpty());
+            });
+            myLastNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+                saveChangesBtn.setDisable(newValue.trim().isEmpty());
+            });
+            myPasswordTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+                saveChangesBtn.setDisable(newValue.trim().isEmpty());
+            });
+            first = false;
+        }
+    }
 }

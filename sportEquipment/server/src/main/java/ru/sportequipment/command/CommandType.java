@@ -5,6 +5,7 @@ import ru.sportequipment.command.guest.RegisterCommand;
 import ru.sportequipment.command.user.BookSkatesCommand;
 import ru.sportequipment.command.user.BookSticksCommand;
 import ru.sportequipment.command.user.LogOutCommand;
+import ru.sportequipment.command.user.UpdateContactCommand;
 import ru.sportequipment.entity.enums.RoleEnum;
 
 import java.util.EnumSet;
@@ -26,6 +27,12 @@ public enum CommandType {
     LOGOUT {
         {
             this.command = new LogOutCommand();
+            this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
+        }
+    },
+    UPDATE_CONTACT {
+        {
+            this.command = new UpdateContactCommand();
             this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
         }
     },
