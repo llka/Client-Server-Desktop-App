@@ -65,8 +65,21 @@ public class Main extends Application {
         }
     }
 
+    public void showManageUsersProfilesView() {
+        logger.debug("show usersProfilesView from main");
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("/layout/usersProfilesView.fxml"));
+            AnchorPane usersProfilesView = (AnchorPane) loader.load();
+
+            rootLayout.setCenter(usersProfilesView);
+        } catch (IOException e) {
+            logger.error("Cannot show usersProfilesView" + e);
+        }
+    }
+
     public void showGuestMainView() {
-        logger.debug("show guest view from main");
+        logger.debug("show guestMainView view from main");
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("/layout/guestMainView.fxml"));

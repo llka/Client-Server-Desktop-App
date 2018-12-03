@@ -41,6 +41,9 @@ public class RootController {
     private MenuItem menuMyProfile;
 
     @FXML
+    private MenuItem menuManageUsersProfiles;
+
+    @FXML
     private MenuItem menuServerConnect;
 
     @FXML
@@ -211,13 +214,22 @@ public class RootController {
 
     @FXML
     void openMyProfileView(ActionEvent event) {
-        if (ContextHolder.getSession() == null ||
-                ContextHolder.getSession().getVisitor() == null) {
+        if (isAuthenticatedUser()) {
+            MyProfileController.setFirst(true);
+            main.showMyProfileView();
+        } else {
             alert(Alert.AlertType.ERROR, "You are not authorized!", "You are not authorized!");
         }
-        MyProfileController.setFirst(true);
-        //first = true;
-        main.showMyProfileView();
+    }
+
+    @FXML
+    void openManageUsersView(ActionEvent event) {
+        if (isAuthenticatedAdmin()) {
+            ManageUsersController.setFirstOpened(true);
+            main.showManageUsersProfilesView();
+        } else {
+            alert(Alert.AlertType.ERROR, "You are not authorized!", "Only Admin can manage users!");
+        }
     }
 
     @FXML
@@ -254,6 +266,7 @@ public class RootController {
                         menuMyProfile.setDisable(true);
                         menuSkates.setDisable(true);
                         menuStick.setDisable(true);
+                        menuManageUsersProfiles.setDisable(true);
                         break;
                     case USER:
                         menuLogIn.setDisable(true);
@@ -262,6 +275,7 @@ public class RootController {
                         menuMyProfile.setDisable(false);
                         menuSkates.setDisable(false);
                         menuStick.setDisable(false);
+                        menuManageUsersProfiles.setDisable(true);
                         break;
                     case ADMIN:
                         menuLogIn.setDisable(true);
@@ -270,11 +284,31 @@ public class RootController {
                         menuMyProfile.setDisable(false);
                         menuSkates.setDisable(false);
                         menuStick.setDisable(false);
+                        menuManageUsersProfiles.setDisable(false);
                         break;
                     default:
                         logger.error("unknown role!");
                 }
             }
+        }
+    }
+
+    private boolean isAuthenticatedUser() {
+        if (ContextHolder.getSession() != null &&
+                ContextHolder.getSession().getVisitor() != null) {
+            return RoleEnum.USER.equals(ContextHolder.getSession().getVisitor().getRole()) ||
+                    RoleEnum.ADMIN.equals(ContextHolder.getSession().getVisitor().getRole());
+        } else {
+            return false;
+        }
+    }
+
+    private boolean isAuthenticatedAdmin() {
+        if (ContextHolder.getSession() != null &&
+                ContextHolder.getSession().getVisitor() != null) {
+            return RoleEnum.ADMIN.equals(ContextHolder.getSession().getVisitor().getRole());
+        } else {
+            return false;
         }
     }
 

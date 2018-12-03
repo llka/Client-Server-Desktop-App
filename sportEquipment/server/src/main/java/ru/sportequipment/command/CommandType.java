@@ -2,10 +2,7 @@ package ru.sportequipment.command;
 
 import ru.sportequipment.command.guest.LogInCommand;
 import ru.sportequipment.command.guest.RegisterCommand;
-import ru.sportequipment.command.user.BookSkatesCommand;
-import ru.sportequipment.command.user.BookSticksCommand;
-import ru.sportequipment.command.user.LogOutCommand;
-import ru.sportequipment.command.user.UpdateContactCommand;
+import ru.sportequipment.command.user.*;
 import ru.sportequipment.entity.enums.RoleEnum;
 
 import java.util.EnumSet;
@@ -30,12 +27,20 @@ public enum CommandType {
             this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
         }
     },
+
+    GET_CONTACTS {
+        {
+            this.command = new GetContactsCommand();
+            this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
+        }
+    },
     UPDATE_CONTACT {
         {
             this.command = new UpdateContactCommand();
             this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
         }
     },
+
     BOOK_STICK {
         {
             this.command = new BookSticksCommand();
@@ -48,6 +53,7 @@ public enum CommandType {
             this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
         }
     },
+
     EMPTY {
         {
             this.command = new EmptyCommand();

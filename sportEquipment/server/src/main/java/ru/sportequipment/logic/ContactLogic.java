@@ -68,35 +68,14 @@ public class ContactLogic {
         if (contact != null) {
             List<Equipment> equipment = new ArrayList<>();
             equipment.addAll(skatesDAO.getContactsSkates(contact.getId()));
-            logger.debug("equipment: skates" + equipment);
+            //logger.debug("equipment: skates" + equipment);
             equipment.addAll(stickDAO.getContactsSticks(contact.getId()));
-            logger.debug("equipment " + equipment);
+            //logger.debug("equipment " + equipment);
             contact.setBookedEquipment(equipment);
-            logger.debug("contact with equipment " + contact);
+            //logger.debug("contact with equipment " + contact);
             return contact;
         } else {
             throw new ApplicationException("Contact is null!", ResponseStatus.BAD_REQUEST);
         }
     }
-
-
-//    private String encodePassword(String password, String email) {
-//        logger.debug("decoded password: " + password);
-//        password = encodeWithSHA512(password, email);
-//        logger.debug("encoded password: " + password);
-//        return password;
-//    }
-//
-//    private Contact encodePassword(Contact contact) {
-//        logger.debug("decoded password: " + contact.getPassword());
-//        contact.setPassword(encodeWithSHA512(contact.getPassword(), contact.getEmail()));
-//        logger.debug("encoded password: " + contact.getPassword());
-//        return contact;
-//    }
-//
-//    private String encodeWithSHA512(String data, String salt) {
-//        return DigestUtils.sha512Hex(data + salt);
-//    }
-
-
 }
