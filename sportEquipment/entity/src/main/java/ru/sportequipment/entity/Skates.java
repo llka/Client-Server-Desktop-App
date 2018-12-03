@@ -1,5 +1,6 @@
 package ru.sportequipment.entity;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import ru.sportequipment.entity.enums.SkatesType;
 
 import javax.validation.constraints.Max;
@@ -7,7 +8,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
 import java.util.Objects;
 
-
+@JsonTypeName("skates")
 public class Skates extends Equipment implements DatabaseEntity {
     private int id;
     private SkatesType type;

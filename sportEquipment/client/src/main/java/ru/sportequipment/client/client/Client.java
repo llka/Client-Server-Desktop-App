@@ -50,7 +50,7 @@ public class Client {
             throw new ClientException("Error while connecting to server.", e);
         }
 
-        logger.debug("Connection accepted " + socket.getInetAddress() + ":" + socket.getPort());
+        logger.info("Connection accepted " + socket.getInetAddress() + ":" + socket.getPort());
 
         try {
             socketInput = new ObjectInputStream(socket.getInputStream());

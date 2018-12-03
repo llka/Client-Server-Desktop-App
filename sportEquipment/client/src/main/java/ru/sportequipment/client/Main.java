@@ -39,7 +39,7 @@ public class Main extends Application {
             loader.setLocation(Main.class.getResource("/layout/root.fxml"));
             rootLayout = (BorderPane) loader.load();
 
-            Scene scene = new Scene(rootLayout, 400, 300);
+            Scene scene = new Scene(rootLayout, 600, 400);
             window.setScene(scene);
 
             //Give the controller access to the main.
@@ -62,6 +62,19 @@ public class Main extends Application {
             rootLayout.setCenter(myProfileView);
         } catch (IOException e) {
             logger.error("Cannot show myProfileView" + e);
+        }
+    }
+
+    public void showGuestMainView() {
+        logger.debug("show guest view from main");
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("/layout/guestMainView.fxml"));
+            AnchorPane guestMainView = (AnchorPane) loader.load();
+
+            rootLayout.setCenter(guestMainView);
+        } catch (IOException e) {
+            logger.error("Cannot show guestMainView" + e);
         }
     }
 

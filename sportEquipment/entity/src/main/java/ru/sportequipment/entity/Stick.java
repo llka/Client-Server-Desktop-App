@@ -1,9 +1,11 @@
 package ru.sportequipment.entity;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import ru.sportequipment.entity.enums.StickType;
 
 import java.util.Objects;
 
+@JsonTypeName("stick")
 public class Stick extends Equipment implements DatabaseEntity {
     private int id;
     private StickType stickType;

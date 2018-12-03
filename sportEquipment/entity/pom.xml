@@ -10,6 +10,7 @@
 
     <properties>
         <hibernate-validator.version>6.0.2.Final</hibernate-validator.version>
+        <jackson.json.version>2.9.7</jackson.json.version>
     </properties>
 
     <packaging>jar</packaging>
@@ -50,6 +51,25 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.8.1</version>
         </dependency>
+
+        <!--json-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.json.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.json.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.json.version}</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>

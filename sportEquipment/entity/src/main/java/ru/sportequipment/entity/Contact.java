@@ -106,7 +106,10 @@ public class Contact implements DatabaseEntity {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 ", role=" + role +
+                ", bookedEquipment=" + bookedEquipment +
                 '}';
     }
 }

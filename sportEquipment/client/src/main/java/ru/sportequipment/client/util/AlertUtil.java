@@ -17,4 +17,11 @@ public class AlertUtil {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    public static void alertError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Ups!");
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }
