@@ -27,7 +27,7 @@ public class SkatesDAO extends EquipmentDAO {
             " WHERE `skates_id`= ?;";
 
     private static final String GET_BY_ID = "SELECT `skates_id`, `type`, `size`, `cost_per_hour`, `booked_from`, `booked_to` " +
-            " FROM `skates` WHERE `skates_id` = ?)";
+            " FROM `skates` WHERE `skates_id` = ?";
     private static final String GET_ALL = "SELECT `skates_id`, `type`, `size`, `cost_per_hour`, `booked_from`, `booked_to` " +
             " FROM `skates`";
     private static final String GET_CONTACTS_SKATES = "SELECT `skates_id`, `type`, `size`, `cost_per_hour`, `booked_from`, `booked_to` " +

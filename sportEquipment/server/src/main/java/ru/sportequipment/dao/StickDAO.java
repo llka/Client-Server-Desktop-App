@@ -26,7 +26,7 @@ public class StickDAO extends EquipmentDAO {
             " WHERE `stick_id`= ?;";
 
     private static final String GET_BY_ID = "SELECT `stick_id`, `type`, `cost_per_hour`, `booked_from`, `booked_to` " +
-            " FROM `stick` WHERE `stick_id` = ?)";
+            " FROM `stick` WHERE `stick_id` = ?";
     private static final String GET_ALL = "SELECT `stick_id`, `type`, `cost_per_hour`, `booked_from`, `booked_to` " +
             "     FROM `stick`";
     private static final String GET_CONTACTS_STICKS = "SELECT `stick_id`, `type`, `cost_per_hour`, `booked_from`, `booked_to` " +

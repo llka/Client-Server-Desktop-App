@@ -2,30 +2,32 @@ package ru.sportequipment.client.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import ru.sportequipment.client.client.ContextHolder;
+import ru.sportequipment.client.exception.ClientException;
+import ru.sportequipment.client.util.JsonUtil;
+import ru.sportequipment.entity.CommandRequest;
+import ru.sportequipment.entity.CommandResponse;
+import ru.sportequipment.entity.Contact;
+
+import static ru.sportequipment.client.util.AlertUtil.alert;
 
 public class MyProfileController {
+    private static final Logger logger = LogManager.getLogger(MyProfileController.class);
+
+    private static boolean first = true;
 
     @FXML
-    private TextField seachByIdTextField;
-
-    @FXML
-    private Button searchBtn;
-
-    @FXML
-    private Button deleteBtn;
-
-    @FXML
-    private Button updateBtn;
+    private AnchorPane myProfilePane;
 
     @FXML
     private Button saveChangesBtn;
-
-    @FXML
-    private TextField searchByEmailTextField;
 
     @FXML
     private TextField myFirstNameTextField;
@@ -40,50 +42,70 @@ public class MyProfileController {
     private TextField myPasswordTextField;
 
     @FXML
-    private TableView<?> employeeTable;
+    void saveChanges(ActionEvent event) {
+        Contact contact = ContextHolder.getSession().getVisitor().getContact();
+        contact.setFirstName(myFirstNameTextField.getText());
+        contact.setLastName(myLastNameTextField.getText());
+        contact.setPassword(myPasswordTextField.getText());
 
-    @FXML
-    private TableColumn<?, ?> userIdColumn;
+        try {
+            ContextHolder.getClient().sendRequest(new CommandRequest("UPDATE_CONTACT", JsonUtil.serialize(contact)));
+            logger.debug("Request sent " + contact);
 
-    @FXML
-    private TableColumn<?, ?> userFirstNameColumn;
 
-    @FXML
-    private TableColumn<?, ?> userLastNameColumn;
+            CommandResponse response = Controller.getLastResponse();
+            logger.debug("Response " + response);
+            if (response.getStatus().is2xxSuccessful()) {
+                Contact updatedContact = JsonUtil.deserialize(response.getBody(), Contact.class);
+                ContextHolder.getSession().getVisitor().setContact(updatedContact);
+                ContextHolder.getSession().getVisitor().setRole(updatedContact.getRole());
+                logger.debug("session " + ContextHolder.getSession());
 
-    @FXML
-    private TableColumn<?, ?> userEmailColumn;
+                myFirstNameTextField.setText(updatedContact.getFirstName());
+                myLastNameTextField.setText(updatedContact.getLastName());
+                myEmailTextField.setText(updatedContact.getEmail());
+                myPasswordTextField.setText(updatedContact.getPassword());
 
-    @FXML
-    private TableColumn<?, ?> userRoleColumn;
+                alert("Successfully saved changes!");
+            } else {
+                alert(Alert.AlertType.ERROR, "Cannot logout!", response.getBody());
+            }
 
-    @FXML
-    private Button getAllUsersBtn;
+        } catch (ClientException e) {
+            alert(Alert.AlertType.ERROR, "Cannot save changes!", e.getMessage());
+        }
 
-    @FXML
-    void saveChanges(ActionEvent event){
 
     }
 
     @FXML
-    void delete(ActionEvent event) {
+    void onMouseEntered(MouseEvent event) {
+        if (first) {
+            Contact contact = ContextHolder.getSession().getVisitor().getContact();
 
+            myFirstNameTextField.setText(contact.getFirstName());
+            myLastNameTextField.setText(contact.getLastName());
+            myEmailTextField.setText(contact.getEmail());
+            myPasswordTextField.setText(contact.getPassword());
+
+            myFirstNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+                saveChangesBtn.setDisable(newValue.trim().isEmpty());
+            });
+            myLastNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+                saveChangesBtn.setDisable(newValue.trim().isEmpty());
+            });
+            myPasswordTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+                saveChangesBtn.setDisable(newValue.trim().isEmpty());
+            });
+            first = false;
+        }
     }
 
-    @FXML
-    void getAllUsers(ActionEvent event) {
-
+    public static boolean isFirst() {
+        return first;
     }
 
-    @FXML
-    void search(ActionEvent event) {
-
+    public static void setFirst(boolean uploadContactInfo) {
+        first = uploadContactInfo;
     }
-
-    @FXML
-    void update(ActionEvent event) {
-
-    }
-
-
 }
