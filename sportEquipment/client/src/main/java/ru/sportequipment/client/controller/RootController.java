@@ -191,7 +191,7 @@ public class RootController {
     @FXML
     void logOut(ActionEvent event) {
         try {
-            ContextHolder.getClient().sendRequest(new CommandRequest("LOGOUT", null));
+            ContextHolder.getClient().sendRequest(new CommandRequest("LOGOUT"));
             logger.debug("Request sent");
 
             CommandResponse response = Controller.getLastResponse();

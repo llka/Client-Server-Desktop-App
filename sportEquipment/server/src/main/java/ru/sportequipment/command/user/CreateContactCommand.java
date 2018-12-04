@@ -1,5 +1,7 @@
 package ru.sportequipment.command.user;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import ru.sportequipment.command.ActionCommand;
 import ru.sportequipment.command.CommandType;
 import ru.sportequipment.entity.CommandRequest;
@@ -11,17 +13,21 @@ import ru.sportequipment.exception.ApplicationException;
 import ru.sportequipment.logic.ContactLogic;
 import ru.sportequipment.util.JsonUtil;
 
-public class UpdateContactCommand implements ActionCommand {
+public class CreateContactCommand implements ActionCommand {
+    private static final Logger logger = LogManager.getLogger(CreateContactCommand.class);
+
     @Override
     public CommandResponse execute(CommandRequest request, CommandResponse response, Session session) throws ApplicationException {
         ContactLogic contactLogic = new ContactLogic();
 
         Contact contact = JsonUtil.deserialize(request.getBody(), Contact.class);
-        contactLogic.update(contact);
-
-        session.getVisitor().setContact(contact);
-        session.getVisitor().setRole(contact.getRole());
-        return new CommandResponse(CommandType.UPDATE_CONTACT.toString(), JsonUtil.serialize(contact), ResponseStatus.OK);
-
+        try {
+            contactLogic.getByEmail(contact.getEmail());
+            return new CommandResponse(CommandType.CREATE_CONTACT.toString(), "Contact with the same email " + contact.getEmail() + " already exists!", ResponseStatus.PARTIAL_CONTENT);
+        } catch (ApplicationException e) {
+            logger.debug("no contacts with such email " + contact.getEmail());
+            contact = contactLogic.register(contact);
+            return new CommandResponse(CommandType.CREATE_CONTACT.toString(), JsonUtil.serialize(contact), ResponseStatus.OK);
+        }
     }
 }

@@ -43,6 +43,10 @@ public class ContactLogic {
         return fetchContactsEquipment(contactDAO.getById(contactId));
     }
 
+    public Contact getByEmail(String email) throws ApplicationException {
+        return fetchContactsEquipment((contactDAO.getByEmail(email)));
+    }
+
     public List<Contact> getAll() throws ApplicationException {
         List<Contact> contacts = contactDAO.getAll();
         for (Contact contact : contacts) {
@@ -62,6 +66,19 @@ public class ContactLogic {
 
     public void delete(Contact contact) throws ApplicationException {
         contactDAO.deleteById(contact.getId());
+    }
+
+    public void delete(String contactIdString, String email) throws ApplicationException {
+        int id = -1;
+        if (contactIdString != null && !contactIdString.isEmpty()) {
+            id = Integer.parseInt(contactIdString);
+            contactDAO.deleteById(id);
+        } else if (email != null && !email.isEmpty()) {
+            Contact contact = contactDAO.getByEmail(email);
+            contactDAO.deleteById(contact.getId());
+        } else {
+            throw new ApplicationException("No contact id or email!", ResponseStatus.BAD_REQUEST);
+        }
     }
 
     private Contact fetchContactsEquipment(Contact contact) throws ApplicationException {

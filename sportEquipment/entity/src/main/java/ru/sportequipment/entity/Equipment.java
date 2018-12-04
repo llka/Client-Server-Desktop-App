@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 
-
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
@@ -17,7 +16,7 @@ import java.util.Date;
         @JsonSubTypes.Type(value = Stick.class, name = "stick"),
         @JsonSubTypes.Type(value = Skates.class, name = "skates")
 })
-public abstract class Equipment{
+public abstract class Equipment {
     private BigDecimal costPerHour;
     private Date bookedFrom;
     private Date bookedTo;

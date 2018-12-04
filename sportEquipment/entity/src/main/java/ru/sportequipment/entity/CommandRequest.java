@@ -26,6 +26,11 @@ public class CommandRequest extends SocketEntity {
         parameters = new HashMap<>();
     }
 
+    public CommandRequest(String command, Map<String, String> parameters) {
+        this.command = command;
+        this.parameters = parameters;
+    }
+
     public CommandRequest(String command, String body, Map<String, String> parameters) {
         this.command = command;
         this.body = body;

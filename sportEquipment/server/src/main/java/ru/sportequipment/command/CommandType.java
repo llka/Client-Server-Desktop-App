@@ -27,7 +27,12 @@ public enum CommandType {
             this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
         }
     },
-
+    GET_CONTACT {
+        {
+            this.command = new GetContactCommand();
+            this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
+        }
+    },
     GET_CONTACTS {
         {
             this.command = new GetContactsCommand();
@@ -37,6 +42,18 @@ public enum CommandType {
     UPDATE_CONTACT {
         {
             this.command = new UpdateContactCommand();
+            this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
+        }
+    },
+    CREATE_CONTACT {
+        {
+            this.command = new CreateContactCommand();
+            this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
+        }
+    },
+    DELETE_CONTACT {
+        {
+            this.command = new DeleteContactCommand();
             this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
         }
     },

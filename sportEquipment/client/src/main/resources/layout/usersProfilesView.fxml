@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.sportequipment.client.controller.ManageUsersController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.sportequipment.client.controller.ManageUsersController">
     <children>
-        <TextField fx:id="seachByIdTextField" layoutX="193.0" layoutY="41.0" prefHeight="25.0" prefWidth="67.0" promptText="id" />
+        <TextField fx:id="seachByIdTextField" layoutX="193.0" layoutY="41.0" prefHeight="25.0" prefWidth="58.0" promptText="id" />
         <Label layoutX="194.0" layoutY="21.0" text="Contact ID" />
         <Button fx:id="searchBtn" layoutX="194.0" layoutY="70.0" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="56.0" text="Search" />
-        <Button fx:id="deleteBtn" layoutX="332.0" layoutY="70.0" mnemonicParsing="false" onAction="#delete" prefHeight="25.0" prefWidth="56.0" text="Delete" />
-        <Button fx:id="updateBtn" layoutX="263.0" layoutY="70.0" mnemonicParsing="false" onAction="#update" prefHeight="25.0" prefWidth="56.0" text="Update" />
+        <Button fx:id="deleteBtn" layoutX="489.0" layoutY="70.0" mnemonicParsing="false" onAction="#delete" prefHeight="25.0" prefWidth="56.0" text="Delete" />
+        <Button fx:id="updateBtn" layoutX="396.0" layoutY="70.0" mnemonicParsing="false" onAction="#update" prefHeight="25.0" prefWidth="83.0" text="Update Role" />
         <Button fx:id="addUserBtn" disable="true" layoutX="82.0" layoutY="156.0" mnemonicParsing="false" onAction="#addUser" text="Add Contact" />
-        <TextField fx:id="searchByEmailTextField" layoutX="268.0" layoutY="41.0" prefHeight="25.0" prefWidth="120.0" promptText="email" />
-        <Label layoutX="270.0" layoutY="21.0" text="Contact Email" />
+        <TextField fx:id="searchByEmailTextField" layoutX="260.0" layoutY="41.0" prefHeight="25.0" prefWidth="128.0" promptText="email" />
         <VBox layoutX="69.0" layoutY="24.0" prefHeight="112.0" prefWidth="110.0" spacing="4.0">
             <children>
                 <TextField fx:id="newFirstNameTextField" prefHeight="25.0" prefWidth="79.0" promptText="First Name" />
@@ -43,6 +45,9 @@
                 <TableColumn fx:id="userRoleColumn" prefWidth="73.0" text="Role" />
             </columns>
         </TableView>
-        <Button fx:id="getAllUsersBtn" layoutX="396.0" layoutY="70.0" mnemonicParsing="false" onAction="#getAllUsers" prefHeight="25.0" prefWidth="139.0" text="Search All Contacts" />
+        <Button fx:id="getAllUsersBtn" layoutX="260.0" layoutY="70.0" mnemonicParsing="false" onAction="#getAllUsers" prefHeight="25.0" prefWidth="128.0" text="Search All Contacts" />
+        <Label layoutX="264.0" layoutY="21.0" text="Contact Email" />
+      <Label layoutX="396.0" layoutY="20.0" text="New Role" />
+      <TextField fx:id="updatedRoleTextField" layoutX="396.0" layoutY="41.0" promptText="role" />
     </children>
 </AnchorPane>
