@@ -42,8 +42,6 @@ public class ManageUsersController {
     private TableColumn<Contact, String> userEmailColumn;
     @FXML
     private TableColumn<Contact, String> userRoleColumn;
-    @FXML
-    private ComboBox<String> updateRoleComboBox;
 
 
     @FXML
@@ -52,6 +50,9 @@ public class ManageUsersController {
     private TextField searchByEmailTextField;
     @FXML
     private TextField updatedRoleTextField;
+    @FXML
+    private ComboBox<String> updateRoleComboBox;
+
 
     @FXML
     private Button addUserBtn;
