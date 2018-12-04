@@ -29,41 +29,30 @@ import static ru.sportequipment.client.util.AlertUtil.alertError;
 public class RootController {
     private static final Logger logger = LogManager.getLogger(RootController.class);
 
-    //Reference to the main application
     private Main main;
 
-    //Is called by the main application to give a reference back to itself.
     public void setMain(Main main) {
         this.main = main;
     }
 
     @FXML
     private MenuItem menuMyProfile;
-
     @FXML
     private MenuItem menuManageUsersProfiles;
-
     @FXML
     private MenuItem menuServerConnect;
-
     @FXML
     private MenuItem menuLogOut;
-
     @FXML
     private MenuItem menuServerDisconnect;
-
     @FXML
     private MenuItem menuLogIn;
-
     @FXML
     private MenuItem menuSkates;
-
     @FXML
     private MenuItem menuStick;
-
     @FXML
     private MenuItem menuManageSkates;
-
     @FXML
     private MenuItem menuManageSticks;
 
@@ -229,7 +218,7 @@ public class RootController {
     @FXML
     void openManageUsersView(ActionEvent event) {
         if (isAuthenticatedAdmin()) {
-            ManageUsersController.setFirstOpened(true);
+            ManageContactsController.setFirstOpened(true);
             main.showView("/layout/usersProfilesView.fxml");
         } else {
             alert(Alert.AlertType.ERROR, "You are not authorized!", "Only Admin can manage users!");

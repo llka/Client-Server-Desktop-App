@@ -5,9 +5,9 @@
 <?import javafx.scene.layout.VBox?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
             prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="ru.sportequipment.client.controller.ManageUsersController">
+            fx:controller="ru.sportequipment.client.controller.ManageContactsController">
     <children>
-        <TextField fx:id="seachByIdTextField" layoutX="193.0" layoutY="41.0" prefHeight="25.0" prefWidth="58.0"
+        <TextField fx:id="searchByIdTextField" layoutX="193.0" layoutY="41.0" prefHeight="25.0" prefWidth="58.0"
                    promptText="id"/>
         <Label layoutX="194.0" layoutY="21.0" text="Contact ID"/>
         <Button fx:id="searchBtn" layoutX="194.0" layoutY="70.0" mnemonicParsing="false" onAction="#search"

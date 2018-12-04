@@ -28,6 +28,8 @@ public enum CommandType {
             this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
         }
     },
+
+
     GET_CONTACT {
         {
             this.command = new GetContactCommand();
@@ -49,13 +51,13 @@ public enum CommandType {
     CREATE_CONTACT {
         {
             this.command = new CreateContactCommand();
-            this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
+            this.role = EnumSet.of(RoleEnum.ADMIN);
         }
     },
     DELETE_CONTACT {
         {
             this.command = new DeleteContactCommand();
-            this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
+            this.role = EnumSet.of(RoleEnum.ADMIN);
         }
     },
 
@@ -89,6 +91,7 @@ public enum CommandType {
             this.role = EnumSet.of(RoleEnum.ADMIN);
         }
     },
+
 
     GET_STICKS {
         {

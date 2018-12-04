@@ -1,4 +1,4 @@
-package ru.sportequipment.command.user;
+package ru.sportequipment.command.admin;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;

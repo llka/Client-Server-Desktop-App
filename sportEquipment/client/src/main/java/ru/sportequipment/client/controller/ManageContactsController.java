@@ -23,14 +23,13 @@ import java.util.Map;
 
 import static ru.sportequipment.client.util.AlertUtil.alert;
 
-public class ManageUsersController {
-    private static final Logger logger = LogManager.getLogger(ManageUsersController.class);
+public class ManageContactsController {
+    private static final Logger logger = LogManager.getLogger(ManageContactsController.class);
 
     private static boolean firstOpened = true;
 
     @FXML
     private TableView contactsTable;
-
     @FXML
     private TableColumn<Contact, Integer> userIdColumn;
     @FXML
@@ -42,16 +41,12 @@ public class ManageUsersController {
     @FXML
     private TableColumn<Contact, String> userRoleColumn;
 
-
     @FXML
-    private TextField seachByIdTextField;
+    private TextField searchByIdTextField;
     @FXML
     private TextField searchByEmailTextField;
     @FXML
-    private TextField updatedRoleTextField;
-    @FXML
     private ComboBox<String> updateRoleComboBox;
-
 
     @FXML
     private Button addUserBtn;
@@ -125,7 +120,7 @@ public class ManageUsersController {
 
     @FXML
     void search(ActionEvent event) {
-        String id = seachByIdTextField.getText();
+        String id = searchByIdTextField.getText();
         String email = searchByEmailTextField.getText();
         Map<String, String> params = new HashMap<>();
         if (id != null && !id.isEmpty()) {
@@ -157,7 +152,7 @@ public class ManageUsersController {
 
     @FXML
     void delete(ActionEvent event) {
-        String id = seachByIdTextField.getText();
+        String id = searchByIdTextField.getText();
         String email = searchByEmailTextField.getText();
         Map<String, String> params = new HashMap<>();
         if (id != null && !id.isEmpty()) {
@@ -188,9 +183,8 @@ public class ManageUsersController {
 
     @FXML
     void update(ActionEvent event) {
-        //String updatedRole = updatedRoleTextField.getText();
         String updatedRole = updateRoleComboBox.getValue();
-        String id = seachByIdTextField.getText();
+        String id = searchByIdTextField.getText();
         String email = searchByEmailTextField.getText();
         Map<String, String> params = new HashMap<>();
 
@@ -286,6 +280,6 @@ public class ManageUsersController {
     }
 
     public static void setFirstOpened(boolean firstOpened) {
-        ManageUsersController.firstOpened = firstOpened;
+        ManageContactsController.firstOpened = firstOpened;
     }
 }
