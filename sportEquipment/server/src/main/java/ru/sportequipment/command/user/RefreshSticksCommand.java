@@ -22,11 +22,9 @@ public class RefreshSticksCommand implements ActionCommand {
     public CommandResponse execute(CommandRequest request, CommandResponse response, Session session) throws ApplicationException {
         StickLogic stickLogic = new StickLogic();
 
-
         List<Stick> stickList = stickLogic.refreshBookingInfo();
 
         if (stickList != null) {
-            logger.debug(stickList);
             StickListDTO stickListDTO = new StickListDTO();
             stickListDTO.setStickList(stickList);
             return new CommandResponse(JsonUtil.serialize(stickListDTO), ResponseStatus.OK);

@@ -46,6 +46,8 @@ public class BookingLogic {
         }
 
         prepareBookingInfo(stick, hours);
+        stickDAO.getById(stick.getId());
+
         stickDAO.update(stick);
         equipmentDAO.bookEquipment(contact, stick);
 
@@ -61,6 +63,8 @@ public class BookingLogic {
         }
 
         prepareBookingInfo(skates, hours);
+        skatesDAO.getById(skates.getId());
+
         skatesDAO.update(skates);
         equipmentDAO.bookEquipment(contact, skates);
 

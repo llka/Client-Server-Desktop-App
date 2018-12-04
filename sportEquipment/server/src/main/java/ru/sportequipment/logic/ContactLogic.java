@@ -9,6 +9,7 @@ import ru.sportequipment.entity.Contact;
 import ru.sportequipment.entity.Equipment;
 import ru.sportequipment.entity.enums.ResponseStatus;
 import ru.sportequipment.exception.ApplicationException;
+import ru.sportequipment.exception.DataBaseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +57,9 @@ public class ContactLogic {
     }
 
     public Contact update(Contact contact) throws ApplicationException {
-        if (contactDAO.getByEmail(contact.getEmail()) == null) {
+        try {
+            contactDAO.getByEmail(contact.getEmail());
+        } catch (DataBaseException e) {
             throw new ApplicationException("You can not change email!", ResponseStatus.BAD_REQUEST);
         }
 
@@ -72,6 +75,7 @@ public class ContactLogic {
         int id = -1;
         if (contactIdString != null && !contactIdString.isEmpty()) {
             id = Integer.parseInt(contactIdString);
+            contactDAO.getById(id);
             contactDAO.deleteById(id);
         } else if (email != null && !email.isEmpty()) {
             Contact contact = contactDAO.getByEmail(email);

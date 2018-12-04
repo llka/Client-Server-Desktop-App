@@ -31,6 +31,7 @@ public class SkatesLogic {
     }
 
     public Skates update(Skates skates) throws ApplicationException {
+        skatesDAO.getById(skates.getId());
         return skatesDAO.update(skates);
     }
 
@@ -72,16 +73,7 @@ public class SkatesLogic {
     }
 
     public void delete(Skates skates) throws DataBaseException {
+        skatesDAO.getById(skates.getId());
         skatesDAO.delete(skates);
-    }
-
-    public void bookSkates(Contact contact, Skates skates) throws ApplicationException {
-        Date now = new Date();
-        if (skates.getBookedTo() != null && skates.getBookedFrom() != null) {
-            if (skates.getBookedTo().after(now)) {
-                throw new ApplicationException("Skates are already booked!", ResponseStatus.BAD_REQUEST);
-            }
-        }
-        skatesDAO.bookSkates(contact, skates);
     }
 }

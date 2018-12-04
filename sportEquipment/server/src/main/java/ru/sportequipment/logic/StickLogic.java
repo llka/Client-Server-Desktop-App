@@ -29,6 +29,7 @@ public class StickLogic {
     }
 
     public Stick update(Stick stick) throws DataBaseException {
+        stickDAO.getById(stick.getId());
         return stickDAO.update(stick);
     }
 
@@ -69,7 +70,8 @@ public class StickLogic {
         return stickDAO.getContactsSticks(contactId);
     }
 
-    public void delete(Stick stick) throws DataBaseException {
+    public void delete(Stick stick) throws ApplicationException {
+        stickDAO.getById(stick.getId());
         stickDAO.delete(stick);
     }
 

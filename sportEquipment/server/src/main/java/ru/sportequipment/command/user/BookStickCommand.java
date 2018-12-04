@@ -18,6 +18,7 @@ public class BookStickCommand implements ActionCommand {
     private static final Logger logger = LogManager.getLogger(BookStickCommand.class);
 
     private static final String HOURS_PARAM = "hours";
+    private static final int IMMEDIATE_BOOKED_EQUIPMENT_QUANTITY = 1;
 
     @Override
     public CommandResponse execute(CommandRequest request, CommandResponse response, Session session) throws ApplicationException {
@@ -32,17 +33,13 @@ public class BookStickCommand implements ActionCommand {
 
         if (request.getParameters() != null) {
             stickList = stickLogic.findSticks(request.getParameters());
-            if (stickList.size() == 1) {
+            if (stickList.size() == IMMEDIATE_BOOKED_EQUIPMENT_QUANTITY) {
                 Stick bookedStick = stickList.get(0);
                 Contact currentContact = bookingLogic.bookEquipment(session.getVisitor().getContact(), bookedStick, Integer.parseInt(request.getParameter(HOURS_PARAM)));
                 session.getVisitor().setContact(currentContact);
 
-                logger.debug("contact " + currentContact);
-
                 stickList = new ArrayList<>();
                 stickList.add(stickLogic.getById(bookedStick.getId()));
-
-                logger.debug(stickList);
 
                 StickListDTO stickListDTO = new StickListDTO();
                 stickListDTO.setStickList(stickList);
