@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GetSkatesCommand implements ActionCommand {
-    private static final Logger logger = LogManager.getLogger(GetContactCommand.class);
+    private static final Logger logger = LogManager.getLogger(GetSkatesCommand.class);
 
     @Override
     public CommandResponse execute(CommandRequest request, CommandResponse response, Session session) throws ApplicationException {

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.sportequipment.client.controller.ManageSkatesController">
+    <children>
+        <Button fx:id="searchBtn" layoutX="229.0" layoutY="76.0" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="56.0" text="Search" />
+        <TextField fx:id="searchBySizeTextField" layoutX="300.0" layoutY="42.0" prefHeight="25.0" prefWidth="56.0" promptText="size" />
+        <Label layoutX="229.0" layoutY="21.0" text="Skates ID" />
+        <TextField fx:id="seachByIdTextField" layoutX="229.0" layoutY="42.0" prefHeight="25.0" prefWidth="56.0" promptText="id" />
+        <Separator layoutY="14.0" prefHeight="4.0" prefWidth="600.0" />
+
+        <Button fx:id="addSkatesBtn" layoutX="44.0" layoutY="188.0" mnemonicParsing="false" onAction="#addSkates" prefHeight="25.0" prefWidth="85.0" text="Add Skates" />
+        <VBox layoutX="94.0" layoutY="54.0" prefHeight="112.0" prefWidth="85.0" spacing="4.0">
+            <children>
+                <TextField fx:id="idForUpdateTextField" prefHeight="25.0" prefWidth="79.0" promptText="Id" />
+                <ComboBox fx:id="typeForUpdateComboBox" prefHeight="25.0" prefWidth="148.0" />
+                <TextField fx:id="sizeForUpdateTextField" prefHeight="25.0" prefWidth="79.0" promptText="Size" />
+                <TextField fx:id="costForUpdateTextField" promptText="Cost" />
+            </children>
+        </VBox>
+        <VBox layoutX="11.0" layoutY="58.0" prefHeight="104.0" prefWidth="79.0" spacing="12.0">
+            <children>
+                <Label text="Id" />
+                <Label text="Type" />
+                <Label text="Size" />
+                <Label prefHeight="17.0" prefWidth="85.0" text="Cost per hour" />
+            </children>
+        </VBox>
+        <Separator layoutY="1.0" prefHeight="17.0" prefWidth="600.0" />
+        <Separator layoutX="179.0" layoutY="15.0" orientation="VERTICAL" prefHeight="385.0" prefWidth="12.0" />
+
+        <TableView fx:id="skatesTable" editable="true" layoutX="198.0" layoutY="122.0" prefHeight="234.0" prefWidth="392.0" tableMenuButtonVisible="true">
+            <columns>
+                <TableColumn fx:id="idColumn" prefWidth="32.0" text="Id" />
+                <TableColumn fx:id="typeColumn" prefWidth="71.0" text="Type" />
+                <TableColumn fx:id="sizeColumn" prefWidth="37.0" text="Size" />
+                <TableColumn fx:id="costPerHourColumn" minWidth="0.0" prefWidth="95.0" text="Cost per Hour" />
+                <TableColumn fx:id="bookedFromColumn" minWidth="0.0" prefWidth="125.0" text="Booked from" />
+                <TableColumn fx:id="bookedToColumn" prefWidth="120.0" text="Booked to" />
+            </columns>
+        </TableView>
+        <Button fx:id="getAllSkatesBtn" layoutX="300.0" layoutY="76.0" mnemonicParsing="false" onAction="#getAllSkates" prefHeight="25.0" prefWidth="128.0" text="Search All Skates" />
+        <Label layoutX="300.0" layoutY="21.0" text="Size" />
+        <Label layoutX="368.0" layoutY="20.0" text="Type" />
+        <ComboBox fx:id="searchByTypeComboBox" layoutX="368.0" layoutY="42.0" prefHeight="25.0" prefWidth="148.0" />
+        <Button fx:id="refreshBtn" layoutX="523.0" layoutY="55.0" mnemonicParsing="false" onAction="#refresh" text="Refresh" />
+        <Button fx:id="deleteBtn" layoutX="442.0" layoutY="76.0" mnemonicParsing="false" onAction="#delete" text="Delete" />
+        <Button fx:id="updateSkatesBtn" layoutX="44.0" layoutY="226.0" mnemonicParsing="false" onAction="#updateSkates" text="Update By Id" />
+    </children>
+</AnchorPane>

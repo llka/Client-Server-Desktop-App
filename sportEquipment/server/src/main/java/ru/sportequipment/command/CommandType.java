@@ -1,5 +1,8 @@
 package ru.sportequipment.command;
 
+import ru.sportequipment.command.admin.CreateSkatesCommand;
+import ru.sportequipment.command.admin.DeleteSkatesCommand;
+import ru.sportequipment.command.admin.UpdateSkatesCommand;
 import ru.sportequipment.command.guest.LogInCommand;
 import ru.sportequipment.command.guest.RegisterCommand;
 import ru.sportequipment.command.user.*;
@@ -68,6 +71,24 @@ public enum CommandType {
         {
             this.command = new RefreshSkatesCommand();
             this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
+        }
+    },
+    DELETE_SKATES {
+        {
+            this.command = new DeleteSkatesCommand();
+            this.role = EnumSet.of(RoleEnum.ADMIN);
+        }
+    },
+    CREATE_SKATES {
+        {
+            this.command = new CreateSkatesCommand();
+            this.role = EnumSet.of(RoleEnum.ADMIN);
+        }
+    },
+    UPDATE_SKATES {
+        {
+            this.command = new UpdateSkatesCommand();
+            this.role = EnumSet.of(RoleEnum.ADMIN);
         }
     },
 

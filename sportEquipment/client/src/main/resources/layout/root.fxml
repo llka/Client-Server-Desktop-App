@@ -30,6 +30,8 @@
                     <items>
                         <MenuItem fx:id="menuSkates" mnemonicParsing="false" onAction="#openSkatesView" text="Skates" />
                         <MenuItem fx:id="menuStick" mnemonicParsing="false" onAction="#openSticksView" text="Stick" />
+                  <MenuItem fx:id="menuManageSkates" mnemonicParsing="false" onAction="#openManageSkatesView" text="Manage Skates" />
+                  <MenuItem fx:id="menuManageSticks" mnemonicParsing="false" onAction="#openManageSticksView" text="Manage Sticks" />
                     </items>
                 </Menu>
             </menus>

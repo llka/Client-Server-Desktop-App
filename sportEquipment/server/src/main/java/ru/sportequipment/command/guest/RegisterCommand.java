@@ -14,7 +14,7 @@ import ru.sportequipment.logic.ContactLogic;
 import ru.sportequipment.util.JsonUtil;
 
 public class RegisterCommand implements ActionCommand {
-    private static final Logger logger = LogManager.getLogger(LogInCommand.class);
+    private static final Logger logger = LogManager.getLogger(RegisterCommand.class);
 
     @Override
     public CommandResponse execute(CommandRequest request, CommandResponse response, Session session) throws ApplicationException {

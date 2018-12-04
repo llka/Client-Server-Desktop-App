@@ -62,6 +62,12 @@ public class RootController {
     private MenuItem menuStick;
 
     @FXML
+    private MenuItem menuManageSkates;
+
+    @FXML
+    private MenuItem menuManageSticks;
+
+    @FXML
     void connectToServer(ActionEvent event) {
         TextInputDialog dialog = new TextInputDialog("1996");
         dialog.setTitle("Connect Dialog");
@@ -216,7 +222,7 @@ public class RootController {
     void openMyProfileView(ActionEvent event) {
         if (isAuthenticatedUser()) {
             MyProfileController.setFirst(true);
-            main.showMyProfileView();
+            main.showView("/layout/myProfileView.fxml");
         } else {
             alert(Alert.AlertType.ERROR, "You are not authorized!", "You are not authorized!");
         }
@@ -226,7 +232,7 @@ public class RootController {
     void openManageUsersView(ActionEvent event) {
         if (isAuthenticatedAdmin()) {
             ManageUsersController.setFirstOpened(true);
-            main.showManageUsersProfilesView();
+            main.showView("/layout/usersProfilesView.fxml");
         } else {
             alert(Alert.AlertType.ERROR, "You are not authorized!", "Only Admin can manage users!");
         }
@@ -237,16 +243,33 @@ public class RootController {
         logger.debug("open openSkatesView!");
         if (isAuthenticatedUser()) {
             SkatesController.setFirstOpened(true);
-            main.showSkatesView();
+            main.showView("/layout/skatesView.fxml");
         } else {
             alert(Alert.AlertType.ERROR, "You are not authorized!", "Only Users and admins can book skates!");
         }
     }
 
     @FXML
+    void openManageSkatesView(ActionEvent event) {
+        if (isAuthenticatedAdmin()) {
+            ManageSkatesController.setFirstOpened(true);
+            main.showView("/layout/manageSkatesView.fxml");
+        } else {
+            alert(Alert.AlertType.ERROR, "You are not authorized!", "Only Admin can manage Skates!");
+        }
+    }
+
+
+    @FXML
     void openSticksView(ActionEvent event) {
         logger.debug("open openStickView!");
     }
+
+    @FXML
+    void openManageSticksView(ActionEvent event) {
+
+    }
+
 
     private void refreshDisabledMenu() {
         Session session = ContextHolder.getSession();
@@ -272,7 +295,10 @@ public class RootController {
                         menuMyProfile.setDisable(true);
                         menuSkates.setDisable(true);
                         menuStick.setDisable(true);
+
                         menuManageUsersProfiles.setDisable(true);
+                        menuManageSkates.setDisable(true);
+                        menuManageSticks.setDisable(true);
                         break;
                     case USER:
                         menuLogIn.setDisable(true);
@@ -281,7 +307,10 @@ public class RootController {
                         menuMyProfile.setDisable(false);
                         menuSkates.setDisable(false);
                         menuStick.setDisable(false);
+
                         menuManageUsersProfiles.setDisable(true);
+                        menuManageSkates.setDisable(true);
+                        menuManageSticks.setDisable(true);
                         break;
                     case ADMIN:
                         menuLogIn.setDisable(true);
@@ -290,7 +319,10 @@ public class RootController {
                         menuMyProfile.setDisable(false);
                         menuSkates.setDisable(false);
                         menuStick.setDisable(false);
+
                         menuManageUsersProfiles.setDisable(false);
+                        menuManageSkates.setDisable(false);
+                        menuManageSticks.setDisable(false);
                         break;
                     default:
                         logger.error("unknown role!");

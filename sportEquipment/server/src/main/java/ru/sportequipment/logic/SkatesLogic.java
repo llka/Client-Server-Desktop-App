@@ -30,7 +30,7 @@ public class SkatesLogic {
         skatesDAO.save(skates);
     }
 
-    public Skates update(Skates skates) throws DataBaseException {
+    public Skates update(Skates skates) throws ApplicationException {
         return skatesDAO.update(skates);
     }
 

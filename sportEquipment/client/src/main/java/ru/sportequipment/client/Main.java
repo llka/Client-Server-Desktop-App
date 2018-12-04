@@ -52,45 +52,6 @@ public class Main extends Application {
         }
     }
 
-    public void showMyProfileView() {
-        logger.debug("show my profile from main");
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("/layout/myProfileView.fxml"));
-            AnchorPane myProfileView = (AnchorPane) loader.load();
-
-            rootLayout.setCenter(myProfileView);
-        } catch (IOException e) {
-            logger.error("Cannot show myProfileView" + e);
-        }
-    }
-
-    public void showManageUsersProfilesView() {
-        logger.debug("show usersProfilesView from main");
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("/layout/usersProfilesView.fxml"));
-            AnchorPane usersProfilesView = (AnchorPane) loader.load();
-
-            rootLayout.setCenter(usersProfilesView);
-        } catch (IOException e) {
-            logger.error("Cannot show usersProfilesView" + e);
-        }
-    }
-
-    public void showSkatesView() {
-        logger.debug("show skatesView from main");
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("/layout/skatesView.fxml"));
-            AnchorPane skatesView = (AnchorPane) loader.load();
-
-            rootLayout.setCenter(skatesView);
-        } catch (IOException e) {
-            logger.error("Cannot show skatesView" + e);
-        }
-    }
-
     public void showGuestMainView() {
         logger.debug("show guestMainView view from main");
         try {
@@ -101,6 +62,18 @@ public class Main extends Application {
             rootLayout.setCenter(guestMainView);
         } catch (IOException e) {
             logger.error("Cannot show guestMainView" + e);
+        }
+    }
+
+    public void showView(String viewPath) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource(viewPath));
+            AnchorPane view = (AnchorPane) loader.load();
+
+            rootLayout.setCenter(view);
+        } catch (IOException e) {
+            logger.error("Cannot show view " + viewPath + " ! " + e);
         }
     }
 
