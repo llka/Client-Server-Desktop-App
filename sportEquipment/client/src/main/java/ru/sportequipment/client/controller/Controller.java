@@ -7,7 +7,6 @@ import java.util.EmptyStackException;
 import java.util.NoSuchElementException;
 
 public class Controller {
-
     public static CommandResponse getLastResponse() {
         while (true) {
             try {

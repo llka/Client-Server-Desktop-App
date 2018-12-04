@@ -235,6 +235,12 @@ public class RootController {
     @FXML
     void openSkatesView(ActionEvent event) {
         logger.debug("open openSkatesView!");
+        if (isAuthenticatedUser()) {
+            SkatesController.setFirstOpened(true);
+            main.showSkatesView();
+        } else {
+            alert(Alert.AlertType.ERROR, "You are not authorized!", "Only Users and admins can book skates!");
+        }
     }
 
     @FXML

@@ -85,11 +85,9 @@ public class ContactLogic {
         if (contact != null) {
             List<Equipment> equipment = new ArrayList<>();
             equipment.addAll(skatesDAO.getContactsSkates(contact.getId()));
-            //logger.debug("equipment: skates" + equipment);
             equipment.addAll(stickDAO.getContactsSticks(contact.getId()));
-            //logger.debug("equipment " + equipment);
+
             contact.setBookedEquipment(equipment);
-            //logger.debug("contact with equipment " + contact);
             return contact;
         } else {
             throw new ApplicationException("Contact is null!", ResponseStatus.BAD_REQUEST);

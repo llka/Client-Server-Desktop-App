@@ -27,12 +27,14 @@ public class BookingLogic {
     private StickDAO stickDAO;
     private SkatesDAO skatesDAO;
     private ContactDAO contactDAO;
+    private ContactLogic contactLogic;
 
     public BookingLogic() {
         this.equipmentDAO = new EquipmentDAO();
         this.contactDAO = new ContactDAO();
         this.skatesDAO = new SkatesDAO();
         this.stickDAO = new StickDAO();
+        this.contactLogic = new ContactLogic();
     }
 
     public Contact bookEquipment(Contact contact, Stick stick, @Positive int hours) throws ApplicationException {
@@ -44,39 +46,53 @@ public class BookingLogic {
         stickDAO.update(stick);
         equipmentDAO.bookEquipment(contact, stick);
 
-        return contactDAO.getById(contact.getId());
+        return contactLogic.getById(contact.getId());
     }
 
     public Contact bookEquipment(Contact contact, Skates skates, @Positive int hours) throws ApplicationException {
         Date now = new Date();
-        if (skatesDAO.getById(skates.getId()).getBookedTo().after(now)) {
-            throw new ApplicationException("This equipment is already booked!", ResponseStatus.BAD_REQUEST);
+        if (skates.getBookedTo() != null && skates.getBookedFrom() != null) {
+            if (skates.getBookedTo().after(now)) {
+                throw new ApplicationException("Skates are already booked!", ResponseStatus.BAD_REQUEST);
+            }
         }
+
+        logger.debug(skates);
         prepareBookingInfo(skates, hours);
+        logger.debug("prepared skates " + skates);
+
         skatesDAO.update(skates);
 
         equipmentDAO.bookEquipment(contact, skates);
-        return contactDAO.getById(contact.getId());
+        return contactLogic.getById(contact.getId());
+    }
+
+    public void refreshContactsHaveSkates(Skates skates) {
 
     }
+
 
     public void refreshBookingInfo() throws DataBaseException {
         List<Skates> skatesList = skatesDAO.getAll();
         Date now = new Date();
         for (Skates skates : skatesList) {
-            if (skates.getBookedTo().before(now)) {
-                skates.setBookedFrom(null);
-                skates.setBookedTo(null);
-                skatesDAO.update(skates);
+            if (skates.getBookedTo() != null) {
+                if (skates.getBookedTo().before(now)) {
+                    skates.setBookedFrom(null);
+                    skates.setBookedTo(null);
+                    skatesDAO.update(skates);
+                }
             }
         }
 
         List<Stick> sticks = stickDAO.getAll();
         for (Stick stick : sticks) {
-            if (stick.getBookedTo().before(now)) {
-                stick.setBookedTo(null);
-                stick.setBookedFrom(null);
-                stickDAO.update(stick);
+            if (stick.getBookedTo() != null) {
+                if (stick.getBookedTo().before(now)) {
+                    stick.setBookedTo(null);
+                    stick.setBookedFrom(null);
+                    stickDAO.update(stick);
+                }
             }
         }
     }

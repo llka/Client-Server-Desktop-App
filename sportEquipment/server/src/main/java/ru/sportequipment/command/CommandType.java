@@ -58,6 +58,19 @@ public enum CommandType {
         }
     },
 
+    GET_SKATES {
+        {
+            this.command = new GetSkatesCommand();
+            this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
+        }
+    },
+    REFRESH_SKATES {
+        {
+            this.command = new RefreshSkatesCommand();
+            this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
+        }
+    },
+
     BOOK_STICK {
         {
             this.command = new BookSticksCommand();

@@ -24,7 +24,6 @@ import java.util.Map;
 import static ru.sportequipment.client.util.AlertUtil.alert;
 
 public class ManageUsersController {
-
     private static final Logger logger = LogManager.getLogger(ManageUsersController.class);
 
     private static boolean firstOpened = true;

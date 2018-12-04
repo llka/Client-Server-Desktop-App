@@ -78,6 +78,19 @@ public class Main extends Application {
         }
     }
 
+    public void showSkatesView() {
+        logger.debug("show skatesView from main");
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("/layout/skatesView.fxml"));
+            AnchorPane skatesView = (AnchorPane) loader.load();
+
+            rootLayout.setCenter(skatesView);
+        } catch (IOException e) {
+            logger.error("Cannot show skatesView" + e);
+        }
+    }
+
     public void showGuestMainView() {
         logger.debug("show guestMainView view from main");
         try {
