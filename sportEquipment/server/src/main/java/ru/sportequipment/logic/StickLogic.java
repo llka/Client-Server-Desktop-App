@@ -5,10 +5,12 @@ import org.apache.log4j.Logger;
 import ru.sportequipment.dao.EquipmentDAO;
 import ru.sportequipment.dao.StickDAO;
 import ru.sportequipment.entity.Stick;
+import ru.sportequipment.exception.ApplicationException;
 import ru.sportequipment.exception.DataBaseException;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class StickLogic {
     private static final Logger logger = LogManager.getLogger(SkatesLogic.class);
@@ -36,6 +38,14 @@ public class StickLogic {
 
     public List<Stick> getAll() throws DataBaseException {
         return stickDAO.getAll();
+    }
+
+    public List<Stick> findSticks(Map<String, String> filterParams) throws ApplicationException {
+        if (filterParams == null || filterParams.isEmpty()) {
+            return stickDAO.getAll();
+        } else {
+            return stickDAO.findSticks(filterParams);
+        }
     }
 
     public List<Stick> refreshBookingInfo() throws DataBaseException {

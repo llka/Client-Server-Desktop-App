@@ -92,9 +92,23 @@ public enum CommandType {
         }
     },
 
+    GET_STICKS {
+        {
+            this.command = new GetSticksCommand();
+            this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
+        }
+    },
+    REFRESH_STICKS {
+        {
+            this.command = new RefreshSticksCommand();
+            this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
+        }
+    },
+
+
     BOOK_STICK {
         {
-            this.command = new BookSticksCommand();
+            this.command = new BookStickCommand();
             this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
         }
     },

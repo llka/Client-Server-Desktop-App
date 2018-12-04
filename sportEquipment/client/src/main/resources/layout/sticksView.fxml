@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+            prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ru.sportequipment.client.controller.SticksController">
+    <children>
+        <Button fx:id="searchBtn" layoutX="105.0" layoutY="76.0" mnemonicParsing="false" onAction="#search"
+                prefHeight="25.0" prefWidth="56.0" text="Search"/>
+        <Button fx:id="bookBtn" layoutX="383.0" layoutY="76.0" mnemonicParsing="false" onAction="#book"
+                prefHeight="25.0" prefWidth="83.0" text="Book"/>
+        <Label layoutX="105.0" layoutY="20.0" text="Stick ID"/>
+        <TextField fx:id="searchByIdTextField" layoutX="105.0" layoutY="45.0" prefHeight="25.0" prefWidth="56.0"
+                   promptText="id"/>
+        <Separator layoutY="14.0" prefHeight="4.0" prefWidth="600.0"/>
+        <TableView fx:id="sticksTable" editable="true" layoutX="17.0" layoutY="121.0" prefHeight="234.0"
+                   prefWidth="567.0" tableMenuButtonVisible="true">
+            <columns>
+                <TableColumn fx:id="idColumn" prefWidth="39.0" text="Id"/>
+                <TableColumn fx:id="typeColumn" prefWidth="87.0" text="Type"/>
+                <TableColumn fx:id="costPerHourColumn" prefWidth="91.0" text="Cost per Hour"/>
+                <TableColumn fx:id="bookedFromColumn" minWidth="0.0" prefWidth="159.0" text="Booked from"/>
+                <TableColumn fx:id="bookedToColumn" prefWidth="154.0" text="Booked to"/>
+            </columns>
+        </TableView>
+        <Button fx:id="getAllSticksBtn" layoutX="180.0" layoutY="76.0" mnemonicParsing="false" onAction="#getAllSticks"
+                prefHeight="25.0" prefWidth="128.0" text="Search All Sticks"/>
+        <Label layoutX="180.0" layoutY="20.0" text="Type"/>
+        <ComboBox fx:id="searchByTypeComboBox" layoutX="180.0" layoutY="45.0" prefHeight="25.0" prefWidth="148.0"/>
+        <TextField fx:id="bookForHoursTextField" layoutX="383.0" layoutY="45.0" prefHeight="25.0" prefWidth="83.0"
+                   promptText="hours"/>
+        <Label layoutX="383.0" layoutY="20.0" text="Book for hours"/>
+        <Button fx:id="refreshBtn" layoutX="506.0" layoutY="45.0" mnemonicParsing="false" onAction="#refresh"
+                text="Refresh"/>
+    </children>
+</AnchorPane>

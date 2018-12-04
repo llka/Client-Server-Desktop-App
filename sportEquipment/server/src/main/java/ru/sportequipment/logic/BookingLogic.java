@@ -39,9 +39,12 @@ public class BookingLogic {
 
     public Contact bookEquipment(Contact contact, Stick stick, @Positive int hours) throws ApplicationException {
         Date now = new Date();
-        if (stickDAO.getById(stick.getId()).getBookedTo().after(now)) {
-            throw new ApplicationException("This equipment is already booked!", ResponseStatus.BAD_REQUEST);
+        if (stick.getBookedTo() != null && stick.getBookedFrom() != null) {
+            if (stick.getBookedTo().after(now)) {
+                throw new ApplicationException("Stick is already booked!", ResponseStatus.BAD_REQUEST);
+            }
         }
+
         prepareBookingInfo(stick, hours);
         stickDAO.update(stick);
         equipmentDAO.bookEquipment(contact, stick);
@@ -57,20 +60,12 @@ public class BookingLogic {
             }
         }
 
-        logger.debug(skates);
         prepareBookingInfo(skates, hours);
-        logger.debug("prepared skates " + skates);
-
         skatesDAO.update(skates);
-
         equipmentDAO.bookEquipment(contact, skates);
+
         return contactLogic.getById(contact.getId());
     }
-
-    public void refreshContactsHaveSkates(Skates skates) {
-
-    }
-
 
     public void refreshBookingInfo() throws DataBaseException {
         List<Skates> skatesList = skatesDAO.getAll();

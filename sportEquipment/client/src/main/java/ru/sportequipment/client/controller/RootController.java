@@ -263,6 +263,12 @@ public class RootController {
     @FXML
     void openSticksView(ActionEvent event) {
         logger.debug("open openStickView!");
+        if (isAuthenticatedUser()) {
+            SticksController.setFirstOpened(true);
+            main.showView("/layout/sticksView.fxml");
+        } else {
+            alert(Alert.AlertType.ERROR, "You are not authorized!", "Only Users and admins can book sticks!");
+        }
     }
 
     @FXML
