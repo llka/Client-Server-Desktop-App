@@ -1,8 +1,6 @@
 package ru.sportequipment.command;
 
-import ru.sportequipment.command.admin.CreateSkatesCommand;
-import ru.sportequipment.command.admin.DeleteSkatesCommand;
-import ru.sportequipment.command.admin.UpdateSkatesCommand;
+import ru.sportequipment.command.admin.*;
 import ru.sportequipment.command.guest.LogInCommand;
 import ru.sportequipment.command.guest.RegisterCommand;
 import ru.sportequipment.command.user.*;
@@ -104,6 +102,24 @@ public enum CommandType {
             this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
         }
     },
+    UPDATE_STICK {
+        {
+            this.command = new UpdateStickCommand();
+            this.role = EnumSet.of(RoleEnum.ADMIN);
+        }
+    },
+    CREATE_STICK {
+        {
+            this.command = new CreateStickCommand();
+            this.role = EnumSet.of(RoleEnum.ADMIN);
+        }
+    },
+    DELETE_STICK {
+        {
+            this.command = new DeleteStickCommand();
+            this.role = EnumSet.of(RoleEnum.ADMIN);
+        }
+    },
 
 
     BOOK_STICK {
@@ -118,6 +134,7 @@ public enum CommandType {
             this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
         }
     },
+
 
     EMPTY {
         {

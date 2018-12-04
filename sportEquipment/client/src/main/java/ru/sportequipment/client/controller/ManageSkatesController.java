@@ -287,11 +287,11 @@ public class ManageSkatesController {
                 if (response.getStatus().is2xxSuccessful()) {
                     alert("Successfully updated skates!");
                 } else {
-                    alert(Alert.AlertType.ERROR, "Cannot add new Skates!", response.getBody());
+                    alert(Alert.AlertType.ERROR, "Cannot update Skates!", response.getBody());
                 }
             } catch (ClientException e) {
                 logger.error(e);
-                alert(Alert.AlertType.ERROR, "Cannot add new Skates!", e.getMessage());
+                alert(Alert.AlertType.ERROR, "Cannot update Skates!", e.getMessage());
             }
 
         } else {

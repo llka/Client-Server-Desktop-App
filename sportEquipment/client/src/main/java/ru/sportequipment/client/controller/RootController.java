@@ -94,7 +94,7 @@ public class RootController {
                 session.setVisitor(new Visitor(RoleEnum.GUEST));
                 ContextHolder.setSession(session);
 
-                refreshDisabledMenu();
+                refreshMenuItemsAccordingToVisitorRole();
                 alert("Successfully connected to the server!");
             } catch (ClientException e) {
                 alertError("Can not connect to the server!");
@@ -111,7 +111,7 @@ public class RootController {
             ContextHolder.getClient().disconnect();
             ContextHolder.setSession(null);
 
-            refreshDisabledMenu();
+            refreshMenuItemsAccordingToVisitorRole();
             main.showGuestMainView();
             alert("Successfully disconnected from the server!");
         } catch (ClientException e) {
@@ -182,7 +182,7 @@ public class RootController {
                     ContextHolder.getSession().getVisitor().setContact(contact);
                     ContextHolder.getSession().getVisitor().setRole(contact.getRole());
                     logger.debug("session " + ContextHolder.getSession());
-                    refreshDisabledMenu();
+                    refreshMenuItemsAccordingToVisitorRole();
                 } else {
                     alert(Alert.AlertType.ERROR, "Cannot login!", response.getBody());
                 }
@@ -190,8 +190,6 @@ public class RootController {
                 alert(Alert.AlertType.ERROR, "Cannot login!", e.getMessage());
             }
         });
-
-
     }
 
     @FXML
@@ -205,7 +203,7 @@ public class RootController {
             if (response.getStatus().is2xxSuccessful()) {
                 ContextHolder.getSession().getVisitor().setContact(null);
                 ContextHolder.getSession().getVisitor().setRole(RoleEnum.GUEST);
-                refreshDisabledMenu();
+                refreshMenuItemsAccordingToVisitorRole();
                 logger.debug("session " + ContextHolder.getSession());
                 main.showGuestMainView();
                 alert("Successfully logged out!");
@@ -262,7 +260,6 @@ public class RootController {
 
     @FXML
     void openSticksView(ActionEvent event) {
-        logger.debug("open openStickView!");
         if (isAuthenticatedUser()) {
             SticksController.setFirstOpened(true);
             main.showView("/layout/sticksView.fxml");
@@ -273,11 +270,15 @@ public class RootController {
 
     @FXML
     void openManageSticksView(ActionEvent event) {
-
+        if (isAuthenticatedAdmin()) {
+            ManageSticksController.setFirstOpened(true);
+            main.showView("/layout/manageSticksView.fxml");
+        } else {
+            alert(Alert.AlertType.ERROR, "You are not authorized!", "Only Admin can manage Sticks!");
+        }
     }
 
-
-    private void refreshDisabledMenu() {
+    private void refreshMenuItemsAccordingToVisitorRole() {
         Session session = ContextHolder.getSession();
         if (session == null) {
             menuServerConnect.setDisable(false);
@@ -289,6 +290,10 @@ public class RootController {
             menuMyProfile.setDisable(true);
             menuSkates.setDisable(true);
             menuStick.setDisable(true);
+
+            menuManageUsersProfiles.setDisable(true);
+            menuManageSkates.setDisable(true);
+            menuManageSticks.setDisable(true);
         } else {
             if (session.getVisitor() != null) {
                 menuServerConnect.setDisable(true);
