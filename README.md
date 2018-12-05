@@ -18,10 +18,10 @@ https://www.jetbrains.com/idea/download/#section=windows
 
 
 install mysql:
--server
--workbench
--connectors (c++, java, odbc)
--router
+  server
+  workbench
+  connectors (c++, java, odbc)
+  router
 https://www.youtube.com/watch?v=WuBcTJnIuzo
 https://dev.mysql.com/downloads/windows/installer/8.0.html
 
