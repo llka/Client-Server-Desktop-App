@@ -18,6 +18,8 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Authentication">
                     <items>
+                        <MenuItem fx:id="menuRegister" disable="true" mnemonicParsing="false" onAction="#register"
+                                  text="Register"/>
                         <MenuItem fx:id="menuLogIn" disable="true" mnemonicParsing="false" onAction="#login"
                                   text="Log in"/>
                         <MenuItem fx:id="menuLogOut" disable="true" mnemonicParsing="false" onAction="#logOut"

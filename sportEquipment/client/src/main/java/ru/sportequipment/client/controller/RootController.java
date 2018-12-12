@@ -48,6 +48,8 @@ public class RootController {
     @FXML
     private MenuItem menuLogIn;
     @FXML
+    private MenuItem menuRegister;
+    @FXML
     private MenuItem menuSkates;
     @FXML
     private MenuItem menuStick;
@@ -182,6 +184,89 @@ public class RootController {
     }
 
     @FXML
+    void register(ActionEvent event) {
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle("Registration Dialog");
+
+        ButtonType loginButtonType = new ButtonType("Sign up", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField firstName = new TextField();
+        firstName.setPromptText("First Name");
+        TextField lastName = new TextField();
+        lastName.setPromptText("Last Name");
+        TextField email = new TextField();
+        email.setPromptText("Email");
+        PasswordField password = new PasswordField();
+        password.setPromptText("Password");
+
+        grid.add(new Label("First Name:"), 0, 0);
+        grid.add(firstName, 1, 0);
+        grid.add(new Label("Last Name:"), 0, 1);
+        grid.add(lastName, 1, 1);
+        grid.add(new Label("Email:"), 0, 2);
+        grid.add(email, 1, 2);
+        grid.add(new Label("Password:"), 0, 3);
+        grid.add(password, 1, 3);
+
+        Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
+        loginButton.setDisable(true);
+
+        final String PAIR_DELIMETER = "__";
+        email.textProperty().addListener((observable, oldValue, newValue) -> {
+            loginButton.setDisable(newValue.trim().isEmpty());
+        });
+
+        dialog.getDialogPane().setContent(grid);
+
+        Platform.runLater(() -> firstName.requestFocus());
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == loginButtonType) {
+                return new Pair<>(firstName.getText().trim() + PAIR_DELIMETER + lastName.getText().trim(),
+                        email.getText().trim() + PAIR_DELIMETER + password.getText().trim());
+            }
+            return null;
+        });
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+
+        result.ifPresent(pair -> {
+            Map<String, String> params = new HashMap<>();
+            Contact contact = new Contact();
+            contact.setFirstName(pair.getKey().split(PAIR_DELIMETER)[0]);
+            contact.setLastName(pair.getKey().split(PAIR_DELIMETER)[1]);
+            contact.setEmail(pair.getValue().split(PAIR_DELIMETER)[0]);
+            contact.setPassword(pair.getValue().split(PAIR_DELIMETER)[1]);
+
+            try {
+                logger.debug("new contact" + contact);
+                ContextHolder.getClient().sendRequest(new CommandRequest("REGISTER", JsonUtil.serialize(contact), params));
+
+                logger.debug("Request sent");
+                CommandResponse response = Controller.getLastResponse();
+                logger.debug("Response " + response);
+                if (response.getStatus().is2xxSuccessful()) {
+                    alert("Successfully signed up!");
+                    Contact savedContact = JsonUtil.deserialize(response.getBody(), Contact.class);
+                    ContextHolder.getSession().getVisitor().setContact(savedContact);
+                    ContextHolder.getSession().getVisitor().setRole(savedContact.getRole());
+                    logger.debug("session " + ContextHolder.getSession());
+                    refreshMenuItemsAccordingToVisitorRole();
+                } else {
+                    alert(Alert.AlertType.ERROR, "Cannot sign up!", response.getBody());
+                }
+            } catch (ClientException e) {
+                alert(Alert.AlertType.ERROR, "Cannot sign up!", e.getMessage());
+            }
+        });
+    }
+
+    @FXML
     void logOut(ActionEvent event) {
         try {
             ContextHolder.getClient().sendRequest(new CommandRequest("LOGOUT"));
@@ -275,6 +360,7 @@ public class RootController {
 
             menuLogIn.setDisable(true);
             menuLogOut.setDisable(true);
+            menuRegister.setDisable(true);
 
             menuMyProfile.setDisable(true);
             menuSkates.setDisable(true);
@@ -291,6 +377,7 @@ public class RootController {
                     case GUEST:
                         menuLogIn.setDisable(false);
                         menuLogOut.setDisable(true);
+                        menuRegister.setDisable(false);
 
                         menuMyProfile.setDisable(true);
                         menuSkates.setDisable(true);
@@ -303,6 +390,7 @@ public class RootController {
                     case USER:
                         menuLogIn.setDisable(true);
                         menuLogOut.setDisable(false);
+                        menuRegister.setDisable(true);
 
                         menuMyProfile.setDisable(false);
                         menuSkates.setDisable(false);
@@ -315,6 +403,7 @@ public class RootController {
                     case ADMIN:
                         menuLogIn.setDisable(true);
                         menuLogOut.setDisable(false);
+                        menuRegister.setDisable(true);
 
                         menuMyProfile.setDisable(false);
                         menuSkates.setDisable(false);

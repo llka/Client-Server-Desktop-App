@@ -19,8 +19,10 @@ public class UpdateContactCommand implements ActionCommand {
         Contact contact = JsonUtil.deserialize(request.getBody(), Contact.class);
         contactLogic.update(contact);
 
-        session.getVisitor().setContact(contact);
-        session.getVisitor().setRole(contact.getRole());
+        if (session.getVisitor().getContact().getId() == contact.getId()) {
+            session.getVisitor().setContact(contact);
+            session.getVisitor().setRole(contact.getRole());
+        }
         return new CommandResponse(CommandType.UPDATE_CONTACT.toString(), JsonUtil.serialize(contact), ResponseStatus.OK);
 
     }

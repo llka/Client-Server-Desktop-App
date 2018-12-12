@@ -8,6 +8,7 @@ import ru.sportequipment.dao.StickDAO;
 import ru.sportequipment.entity.Contact;
 import ru.sportequipment.entity.Equipment;
 import ru.sportequipment.entity.enums.ResponseStatus;
+import ru.sportequipment.entity.enums.RoleEnum;
 import ru.sportequipment.exception.ApplicationException;
 import ru.sportequipment.exception.DataBaseException;
 
@@ -36,6 +37,7 @@ public class ContactLogic {
     }
 
     public Contact register(Contact contact) throws ApplicationException {
+        contact.setRole(RoleEnum.USER);
         contactDAO.register(contact);
         return fetchContactsEquipment(contactDAO.getByEmail(contact.getEmail()));
     }
