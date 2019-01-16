@@ -123,6 +123,12 @@ public enum CommandType {
             this.role = EnumSet.of(RoleEnum.ADMIN);
         }
     },
+    GENERATE_REPORT {
+        {
+            this.command = new GenerateReport();
+            this.role = EnumSet.of(RoleEnum.ADMIN, RoleEnum.USER);
+        }
+    },
 
 
     BOOK_STICK {

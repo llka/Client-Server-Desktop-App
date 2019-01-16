@@ -7,6 +7,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.stage.DirectoryChooser;
 import javafx.util.Pair;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -19,6 +20,7 @@ import ru.sportequipment.client.util.JsonUtil;
 import ru.sportequipment.entity.*;
 import ru.sportequipment.entity.enums.RoleEnum;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -35,6 +37,8 @@ public class RootController {
         this.main = main;
     }
 
+    @FXML
+    private MenuItem menuGenerateReport;
     @FXML
     private MenuItem menuMyProfile;
     @FXML
@@ -331,6 +335,48 @@ public class RootController {
         }
     }
 
+    private String chooseDirectory() {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        // Set title for DirectoryChooser
+        directoryChooser.setTitle("Select Directory");
+        // Set Initial Directory
+        directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+
+
+        File directory = directoryChooser.showDialog(main.getWindow());
+        if (directory != null) {
+            logger.debug("chosen directory " + directory.getAbsolutePath());
+            return directory.getAbsolutePath();
+        } else {
+            return "";
+        }
+    }
+
+    @FXML
+    void generateReport(ActionEvent event) {
+        if (isAuthenticatedUser()) {
+            String directoryPath = chooseDirectory();
+            Map<String, String> params = new HashMap<>();
+            params.put("path", directoryPath);
+
+            try {
+                ContextHolder.getClient().sendRequest(new CommandRequest("GENERATE_REPORT", params));
+
+                CommandResponse response = Controller.getLastResponse();
+                if (response.getStatus().is2xxSuccessful()) {
+                    main.showGuestMainView();
+                    alert("Successfully generated report!");
+                } else {
+                    alert(Alert.AlertType.ERROR, "Cannot generate report!", response.getBody());
+                }
+
+            } catch (ClientException e) {
+                alert(Alert.AlertType.ERROR, "Cannot generate report!", e.getMessage());
+            }
+        } else {
+            alert(Alert.AlertType.ERROR, "You are not authorized!", "You are not authorized!");
+        }
+    }
 
     @FXML
     void openSticksView(ActionEvent event) {
@@ -369,6 +415,7 @@ public class RootController {
             menuManageUsersProfiles.setDisable(true);
             menuManageSkates.setDisable(true);
             menuManageSticks.setDisable(true);
+            menuGenerateReport.setDisable(true);
         } else {
             if (session.getVisitor() != null) {
                 menuServerConnect.setDisable(true);
@@ -386,6 +433,7 @@ public class RootController {
                         menuManageUsersProfiles.setDisable(true);
                         menuManageSkates.setDisable(true);
                         menuManageSticks.setDisable(true);
+                        menuGenerateReport.setDisable(true);
                         break;
                     case USER:
                         menuLogIn.setDisable(true);
@@ -399,6 +447,7 @@ public class RootController {
                         menuManageUsersProfiles.setDisable(true);
                         menuManageSkates.setDisable(true);
                         menuManageSticks.setDisable(true);
+                        menuGenerateReport.setDisable(false);
                         break;
                     case ADMIN:
                         menuLogIn.setDisable(true);
@@ -408,6 +457,7 @@ public class RootController {
                         menuMyProfile.setDisable(false);
                         menuSkates.setDisable(false);
                         menuStick.setDisable(false);
+                        menuGenerateReport.setDisable(false);
 
                         menuManageUsersProfiles.setDisable(false);
                         menuManageSkates.setDisable(false);
